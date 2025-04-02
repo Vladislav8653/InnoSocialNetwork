@@ -1,0 +1,65 @@
+﻿# Custom files and folders
+global.json
+Migrations/
+
+# IDE-specific
+.idea/
+.vscode/
+.vs/
+
+# Build folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# Logs
+*.log
+logs/
+internal_logs/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Package directories
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated files
+*.dll
+*.exe
+*.app
+*.dylib
+*.so
+*.pdb
+*.mdb
+*.cache
+
+# Publish output
+publish/
+out/
+
+# Testing
+.TestResults/
+*.coverage
+*.coveragexml
+*.trx
+
+# ASP.NET Core specific
+.env
+*.Secret.json
+
+# Other
+*.bak
+*.swp
+*.tmp
+*.temp
+
+# Rider IDE specific
+*.iml
