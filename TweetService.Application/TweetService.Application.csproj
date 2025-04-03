@@ -11,4 +11,8 @@
       <Folder Include="DTOs\TweetsDto\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TweetService.Domain\TweetService.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
