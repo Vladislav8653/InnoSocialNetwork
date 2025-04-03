@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="DTOs\StickersDto\" />
+      <Folder Include="DTOs\TweetsDto\" />
+    </ItemGroup>
+
 </Project>
