@@ -7,12 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Contracts\UseCasesContracts\" />
       <Folder Include="DTOs\StickersDto\" />
       <Folder Include="DTOs\TweetsDto\" />
+      <Folder Include="UseCases\Queries\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\TweetService.Domain\TweetService.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.5.0" />
     </ItemGroup>
 
 </Project>
