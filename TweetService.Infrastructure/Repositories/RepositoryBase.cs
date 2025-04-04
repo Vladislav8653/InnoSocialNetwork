@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TweetService.Application.Contracts.RepositoryContracts;
-using TweetService.Infrastructure.Pagination;
+using TweetService.Application.Pagination;
 
 namespace TweetService.Infrastructure.Repositories;
 

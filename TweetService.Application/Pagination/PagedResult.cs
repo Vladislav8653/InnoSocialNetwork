@@ -1,4 +1,4 @@
-﻿namespace TweetService.Infrastructure.Pagination;
+﻿namespace TweetService.Application.Pagination;
 
 public class PagedResult<T> (IEnumerable<T> items, int total)
 {

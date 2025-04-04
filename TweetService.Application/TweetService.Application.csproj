@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Contracts\UseCasesContracts\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\TweetService.Domain\TweetService.Domain.csproj" />
     </ItemGroup>
 

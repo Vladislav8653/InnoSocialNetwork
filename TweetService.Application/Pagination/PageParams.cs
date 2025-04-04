@@ -1,4 +1,4 @@
-﻿namespace TweetService.Infrastructure.Pagination;
+﻿namespace TweetService.Application.Pagination;
 
 public class PageParams(int page, int pageSize)
 {
