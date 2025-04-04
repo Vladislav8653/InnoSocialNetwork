@@ -3,8 +3,8 @@ using TweetService.Domain.Models;
 
 namespace TweetService.Infrastructure.Repositories;
 
-public class TweetRepository(ApplicationContext repositoryContext)
-    : RepositoryBase<Tweet>(repositoryContext), ITweetRepository
+public class TweetRepository(ApplicationContext context)
+    : RepositoryBase<Tweet>(context), ITweetRepository
 {
     
 }

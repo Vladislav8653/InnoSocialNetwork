@@ -3,8 +3,8 @@ using TweetService.Domain.Models;
 
 namespace TweetService.Infrastructure.Repositories;
 
-public class StickerRepository(ApplicationContext repositoryContext)
-    : RepositoryBase<Sticker>(repositoryContext), IStickerRepository
+public class StickerRepository(ApplicationContext context)
+    : RepositoryBase<Sticker>(context), IStickerRepository
 {
     
 }
