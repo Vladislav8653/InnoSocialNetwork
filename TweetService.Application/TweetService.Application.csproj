@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Contracts\UseCasesContracts\" />
-      <Folder Include="DTOs\TweetsDto\" />
     </ItemGroup>
 
     <ItemGroup>
