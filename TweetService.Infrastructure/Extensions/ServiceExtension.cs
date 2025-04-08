@@ -1,4 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TweetService.Application.Contracts.RepositoryContracts;
 using TweetService.Application.Validation;
@@ -16,5 +19,16 @@ public static class ServiceExtension
     public static void AddValidators(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<TweetValidator>();
+    }
+    
+    public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
+        services.AddDbContext<ApplicationContext>(opts =>
+            opts.UseNpgsql(configuration.GetConnectionString("sqlConnection")));
+    
+    public static void ApplyMigrations(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+        dbContext.Database.Migrate();
     }
 }
