@@ -8,7 +8,8 @@ namespace TweetService.Application.UseCases.Commands.Tweet.CreateTweet;
 public class CreateTweetCommandHandler(
     IMapper mapper, 
     ITweetRepository tweetRepository, 
-    IValidator<Domain.Models.Tweet> validator) : IRequestHandler<CreateTweetCommand, Unit>
+    IValidator<Domain.Models.Tweet> validator) : 
+    IRequestHandler<CreateTweetCommand, Unit>
 {
     public async Task<Unit> Handle(CreateTweetCommand request, CancellationToken cancellationToken)
     {
@@ -19,6 +20,7 @@ public class CreateTweetCommandHandler(
         
         var tweet = mapper.Map<Domain.Models.Tweet>(request.NewTweet);
         tweet.WriterId = userIdGuid;
+        tweet.Created = DateTime.UtcNow;
         
         var validationResult = await validator.ValidateAsync(tweet, cancellationToken);
         if (!validationResult.IsValid)

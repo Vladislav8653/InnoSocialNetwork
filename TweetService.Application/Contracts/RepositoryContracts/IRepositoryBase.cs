@@ -5,9 +5,12 @@ namespace TweetService.Application.Contracts.RepositoryContracts;
 
 public interface IRepositoryBase<T>
 {
-    Task CreateAsync(T entity, CancellationToken cancellationToken);
-    void Delete(T entity);
-    void Update(T entity);
+    public Task CreateAsync(T entity, CancellationToken cancellationToken);
+    
+    public Task UpdateAsync(T entity, CancellationToken cancellationToken);
+    
+    public Task DeleteAsync(T entity, CancellationToken cancellationToken);
+    
     public Task<IEnumerable<T>> FindAllAsync(bool trackChanges, CancellationToken cancellationToken);
     public Task<IEnumerable<T>> FindByConditionAsync(
         Expression<Func<T, bool>> expression,

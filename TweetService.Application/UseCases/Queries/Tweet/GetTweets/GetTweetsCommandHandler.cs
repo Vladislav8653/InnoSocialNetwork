@@ -13,11 +13,11 @@ public class GetTweetsCommandHandler(
 {
     public async Task<PagedResult<TweetResponseToDto>> Handle(GetTweetsCommand request, CancellationToken cancellationToken)
     {
-        var products = await tweetRepository.GetByPageAsync(
+        var tweets = await tweetRepository.GetByPageAsync(
             request.PageParams, false, cancellationToken);
         
-        var productsResponseDto = mapper.Map<IEnumerable<TweetResponseToDto>>(products.Items);
+        var tweetsResponseDto = mapper.Map<IEnumerable<TweetResponseToDto>>(tweets.Items);
         
-        return new PagedResult<TweetResponseToDto>(productsResponseDto, products.Total);
+        return new PagedResult<TweetResponseToDto>(tweetsResponseDto, tweets.Total);
     }
 }

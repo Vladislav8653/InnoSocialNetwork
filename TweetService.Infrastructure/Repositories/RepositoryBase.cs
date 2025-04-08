@@ -8,10 +8,24 @@ namespace TweetService.Infrastructure.Repositories;
 public abstract class RepositoryBase<T>(ApplicationContext context) : 
     IRepositoryBase<T> where T : class
 {
-    public async Task CreateAsync(T entity, CancellationToken cancellationToken) =>
+    public async Task CreateAsync(T entity, CancellationToken cancellationToken)
+    {
         await context.Set<T>().AddAsync(entity, cancellationToken);
-    public void Delete(T entity) => context.Set<T>().Remove(entity);
-    public void Update(T entity) => context.Set<T>().Update(entity);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task UpdateAsync(T entity, CancellationToken cancellationToken)
+    {
+        context.Set<T>().Update(entity);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(T entity, CancellationToken cancellationToken)
+    {
+        context.Set<T>().Remove(entity);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+    
     public async Task<IEnumerable<T>> FindAllAsync(bool trackChanges, CancellationToken cancellationToken)
     {
         IQueryable<T> query = context.Set<T>();

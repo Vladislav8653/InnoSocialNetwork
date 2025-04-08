@@ -12,14 +12,14 @@ public class GetTweetByIdCommandHandler(
 {
     public async Task<TweetResponseToDto> Handle(GetTweetByIdCommand request, CancellationToken cancellationToken)
     {
-        var products = await tweetRepository.FindByConditionAsync(
-            product => product.Id == request.Id,false, cancellationToken);
-        var product = products.FirstOrDefault();
-        if (product is null)
+        var tweets = await tweetRepository.FindByConditionAsync(
+            tweet => tweet.Id == request.Id,false, cancellationToken);
+        var tweet = tweets.FirstOrDefault();
+        if (tweet is null)
             throw new InvalidOperationException($"Tweet with id {request.Id} not found");
         
-        var productResponseDto = mapper.Map<TweetResponseToDto>(product);
+        var tweetResponseDto = mapper.Map<TweetResponseToDto>(tweet);
         
-        return productResponseDto;
+        return tweetResponseDto;
     }
 }
