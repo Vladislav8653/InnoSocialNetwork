@@ -30,6 +30,7 @@ public class UpdateTweetCommandHandler(
         }
             
         mapper.Map(request.NewTweet, tweet);
+        tweet.Modified = DateTime.UtcNow;
         
         var validationResult = await validator.ValidateAsync(tweet, cancellationToken);
         if (!validationResult.IsValid)
