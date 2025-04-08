@@ -3,6 +3,8 @@ using TweetService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);   
 builder.Services.ConfigureRepository();
+builder.Services.AddValidators();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddControllers();
