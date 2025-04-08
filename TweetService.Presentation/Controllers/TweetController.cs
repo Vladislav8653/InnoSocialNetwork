@@ -10,7 +10,6 @@ using TweetService.Application.UseCases.Commands.Tweet.UpdateTweet;
 using TweetService.Application.UseCases.Queries.Tweet.GetTweetById;
 using TweetService.Application.UseCases.Queries.Tweet.GetTweets;
 
-
 namespace TweetService.Presentation.Controllers;
 
 [ApiController]

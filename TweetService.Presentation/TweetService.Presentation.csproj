@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TweetService.Application\TweetService.Application.csproj" />
+      <ProjectReference Include="..\TweetService.Infrastructure\TweetService.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
