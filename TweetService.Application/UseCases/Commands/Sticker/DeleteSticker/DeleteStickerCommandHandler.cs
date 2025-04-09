@@ -1,11 +1,34 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
+using TweetService.Application.Contracts.RepositoryContracts;
 
 namespace TweetService.Application.UseCases.Commands.Sticker.DeleteSticker;
 
-public class DeleteStickerCommandHandler : IRequestHandler<DeleteStickerCommand, Unit>
+public class DeleteStickerCommandHandler(
+    IStickerRepository stickerRepository) : 
+    IRequestHandler<DeleteStickerCommand, Unit>
 {
     public async Task<Unit> Handle(DeleteStickerCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (!Guid.TryParse(request.UserId, out var userIdGuid))
+        {
+            throw new ValidationException("UserId is invalid");
+        }
+        
+        var stickers = await stickerRepository
+            .FindByConditionAsync(sticker => sticker.Id == request.Id,
+                false, cancellationToken);
+        var sticker = stickers.FirstOrDefault();
+        if (sticker is null)
+            throw new InvalidOperationException($"Sticker with id {request.Id} not found");
+        
+        if (sticker.UserId != userIdGuid)
+        {
+            throw new UnauthorizedAccessException("User is not authorized to delete this sticker");
+        }
+        
+        await stickerRepository.DeleteAsync(sticker, cancellationToken);
+        
+        return Unit.Value;
     }
 }
