@@ -19,10 +19,10 @@ public class UpdateStickerCommandHandler(
         }
         
         var stickers = await stickerRepository.FindByConditionAsync(sticker => 
-            sticker.Id == request.Id,false, cancellationToken);
+            sticker.Id == request.StickerId,false, cancellationToken);
         var sticker = stickers.FirstOrDefault();
         if (sticker is null)
-            throw new InvalidOperationException($"Sticker with id {request.Id} not found");
+            throw new InvalidOperationException($"Sticker with id {request.StickerId} not found");
         
         if (sticker.UserId != userIdGuid)
         {

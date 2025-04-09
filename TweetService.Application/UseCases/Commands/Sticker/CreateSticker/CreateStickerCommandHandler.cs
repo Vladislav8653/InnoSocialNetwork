@@ -18,7 +18,7 @@ public class CreateStickerCommandHandler(
             throw new ValidationException("UserId is invalid");
         }
         
-        var sticker = mapper.Map<Domain.Models.Sticker>(request.StickerDto);
+        var sticker = mapper.Map<Domain.Models.Sticker>(request.NewSticker);
         sticker.UserId = userIdGuid;
         
         var validationResult = await validator.ValidateAsync(sticker, cancellationToken);
