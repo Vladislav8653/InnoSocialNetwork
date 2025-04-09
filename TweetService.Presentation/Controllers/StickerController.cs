@@ -13,7 +13,7 @@ namespace TweetService.Presentation.Controllers;
 
 
 [ApiController]
-[Route("sticker")]
+[Route("stickers")]
 public class StickerController(ISender sender) : ControllerBase
 {
     [HttpGet]
