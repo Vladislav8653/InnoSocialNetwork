@@ -11,6 +11,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
+app.ConfigureExceptionHandler();
 app.UseRouting();
 app.MapControllers();
 //app.ApplyMigrations();
