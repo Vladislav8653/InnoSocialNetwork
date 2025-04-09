@@ -4,9 +4,9 @@ using TweetService.Domain.Models;
 
 namespace TweetService.Application.MappingProfiles;
 
-public class ProductMappingProfile : Profile
+public class TweetMappingProfile : Profile
 {
-    public ProductMappingProfile()
+    public TweetMappingProfile()
     {
         CreateMap<TweetRequestDto, Tweet>();
         CreateMap<Tweet, TweetResponseDto>();
