@@ -8,7 +8,7 @@ public class ProductMappingProfile : Profile
 {
     public ProductMappingProfile()
     {
-        CreateMap<TweetRequestToDto, Tweet>();
-        CreateMap<Tweet, TweetResponseToDto>();
+        CreateMap<TweetRequestDto, Tweet>();
+        CreateMap<Tweet, TweetResponseDto>();
     }
 }

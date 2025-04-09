@@ -1,6 +1,6 @@
 ﻿namespace TweetService.Application.DTOs.WritersDto;
 
-public record WriterRequestToDto
+public record WriterRequestDto
 {
     public string Login { get; init; } 
     public string Password { get; init; } 

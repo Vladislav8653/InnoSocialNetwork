@@ -3,9 +3,9 @@ using TweetService.Application.DTOs.StickersDto;
 
 namespace TweetService.Application.UseCases.Queries.Sticker.GetStickers;
 
-public class GetStickersCommandHandler :  IRequestHandler<GetStickersCommand, IEnumerable<StickerResponseToDto>>
+public class GetStickersCommandHandler :  IRequestHandler<GetStickersCommand, IEnumerable<StickerResponseDto>>
 {
-    public async Task<IEnumerable<StickerResponseToDto>> Handle(GetStickersCommand request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<StickerResponseDto>> Handle(GetStickersCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

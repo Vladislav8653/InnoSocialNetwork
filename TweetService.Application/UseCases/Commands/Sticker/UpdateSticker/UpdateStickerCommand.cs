@@ -7,5 +7,5 @@ public record UpdateStickerCommand : IRequest<Unit>
 {
     public string? UserId {get; init; } 
     public Guid Id { get; init; }
-    public StickerRequestToDto NewSticker { get; init; }
+    public StickerRequestDto NewSticker { get; init; }
 }

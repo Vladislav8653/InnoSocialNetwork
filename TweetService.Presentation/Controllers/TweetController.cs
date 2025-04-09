@@ -46,7 +46,7 @@ public class TweetController(ISender sender) : ControllerBase
 
     //[Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateTweet([FromBody] TweetRequestToDto request,
+    public async Task<IActionResult> CreateTweet([FromBody] TweetRequestDto request,
         CancellationToken cancellationToken)
     {
         var query = new CreateTweetCommand
@@ -63,7 +63,7 @@ public class TweetController(ISender sender) : ControllerBase
     //[Authorize]
     [HttpPut("{tweetId:guid}")]
     public async Task<IActionResult> UpdateTweet(
-        [FromBody] TweetRequestToDto request,
+        [FromBody] TweetRequestDto request,
         Guid tweetId,
         CancellationToken cancellationToken)
     {

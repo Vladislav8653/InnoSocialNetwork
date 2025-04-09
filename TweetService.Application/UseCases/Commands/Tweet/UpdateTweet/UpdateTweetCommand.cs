@@ -7,5 +7,5 @@ public record UpdateTweetCommand : IRequest<Unit>
 {
     public string? UserId {get; init; } 
     public Guid TweetId { get; init; }
-    public TweetRequestToDto NewTweet { get; init; }
+    public TweetRequestDto NewTweet { get; init; }
 }

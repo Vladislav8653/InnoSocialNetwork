@@ -1,6 +1,6 @@
 ﻿namespace TweetService.Application.DTOs.StickersDto;
 
-public record StickerRequestToDto
+public record StickerRequestDto
 {
     public string Name { get; init; }
 }

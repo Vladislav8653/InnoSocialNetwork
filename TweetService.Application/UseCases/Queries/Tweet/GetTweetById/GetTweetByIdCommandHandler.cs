@@ -8,9 +8,9 @@ namespace TweetService.Application.UseCases.Queries.Tweet.GetTweetById;
 public class GetTweetByIdCommandHandler(
     ITweetRepository tweetRepository,
     IMapper mapper) :
-    IRequestHandler<GetTweetByIdCommand, TweetResponseToDto>
+    IRequestHandler<GetTweetByIdCommand, TweetResponseDto>
 {
-    public async Task<TweetResponseToDto> Handle(GetTweetByIdCommand request, CancellationToken cancellationToken)
+    public async Task<TweetResponseDto> Handle(GetTweetByIdCommand request, CancellationToken cancellationToken)
     {
         var tweets = await tweetRepository.FindByConditionAsync(
             tweet => tweet.Id == request.Id,false, cancellationToken);
@@ -18,7 +18,7 @@ public class GetTweetByIdCommandHandler(
         if (tweet is null)
             throw new InvalidOperationException($"Tweet with id {request.Id} not found");
         
-        var tweetResponseDto = mapper.Map<TweetResponseToDto>(tweet);
+        var tweetResponseDto = mapper.Map<TweetResponseDto>(tweet);
         
         return tweetResponseDto;
     }
