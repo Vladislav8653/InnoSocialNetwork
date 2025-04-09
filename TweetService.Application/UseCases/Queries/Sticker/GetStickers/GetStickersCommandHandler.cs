@@ -1,12 +1,23 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using TweetService.Application.Contracts.RepositoryContracts;
 using TweetService.Application.DTOs.StickersDto;
+using TweetService.Application.Pagination;
 
 namespace TweetService.Application.UseCases.Queries.Sticker.GetStickers;
 
-public class GetStickersCommandHandler :  IRequestHandler<GetStickersCommand, IEnumerable<StickerResponseDto>>
+public class GetStickersCommandHandler(
+    IStickerRepository stickerRepository,
+    IMapper mapper) :
+    IRequestHandler<GetStickersCommand, PagedResult<StickerResponseDto>>
 {
-    public async Task<IEnumerable<StickerResponseDto>> Handle(GetStickersCommand request, CancellationToken cancellationToken)
+    public async Task<PagedResult<StickerResponseDto>> Handle(GetStickersCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var stickers = await stickerRepository.GetByPageAsync(
+            request.PageParams, false, cancellationToken);
+        
+        var stickersResponseDto = mapper.Map<IEnumerable<StickerResponseDto>>(stickers.Items);
+        
+        return new PagedResult<StickerResponseDto>(stickersResponseDto, stickers.Total);
     }
 }
