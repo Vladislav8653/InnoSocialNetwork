@@ -10,4 +10,8 @@
       <ProjectReference Include="..\DiscussionService.Application\DiscussionService.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
+    </ItemGroup>
+
 </Project>
