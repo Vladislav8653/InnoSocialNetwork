@@ -5,8 +5,8 @@ namespace DiscussionService.Application.Contracts;
 
 public interface IMessageRepository
 {
-    Task<Message> GetByTweetIdAsync(Guid tweetId);
-    Task<IEnumerable<Message>> GetAllAsync();
+    Task<Message> GetByIdAsync(ObjectId id);
+    Task<IEnumerable<Message>> GetAllAsync(Guid tweetId);
     Task CreateAsync(Message message);
     Task DeleteAsync(ObjectId messageId);
     Task UpdateAsync(Message message, ObjectId messageId);

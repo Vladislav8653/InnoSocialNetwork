@@ -1,6 +1,6 @@
-﻿using DiscussionService.Domain.Models;
+﻿using DiscussionService.Application.DTOs;
 using MediatR;
 
 namespace DiscussionService.Application.Queries;
 
-public record GetAllMessagesQuery : IRequest<IEnumerable<Message>>;
+public record GetAllMessagesQuery : IRequest<IEnumerable<MessageResponseDto>>;

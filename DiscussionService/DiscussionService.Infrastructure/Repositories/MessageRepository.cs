@@ -19,11 +19,11 @@ public class MessageRepository : IMessageRepository
         _collection = database.GetCollection<Message>(settings.Value.MessageDocument);
     }
     
-    public async Task<Message> GetByTweetIdAsync(Guid tweetId) =>
-        await _collection.Find(m => m.TweetId == tweetId).FirstOrDefaultAsync();
+    public async Task<Message> GetByIdAsync(ObjectId id) =>
+        await _collection.Find(message => message.Id == id).SingleOrDefaultAsync();
 
-    public async Task<IEnumerable<Message>> GetAllAsync() => 
-        await _collection.Find(_ => true).ToListAsync();
+    public async Task<IEnumerable<Message>> GetAllAsync(Guid tweetId) => 
+        await _collection.Find(m => m.TweetId == tweetId).ToListAsync();
 
     public async Task CreateAsync(Message message) =>
         await _collection.InsertOneAsync(message);
