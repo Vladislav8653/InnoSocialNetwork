@@ -1,17 +1,27 @@
-﻿using DiscussionService.Application.Commands;
+﻿using AutoMapper;
+using DiscussionService.Application.Commands;
 using DiscussionService.Application.Contracts;
 using DiscussionService.Domain.Models;
+using FluentValidation;
 using MediatR;
 
 namespace DiscussionService.Application.UseCases;
 
-public class CreateMessageCommandHandler(IMessageRepository repository) : IRequestHandler<CreateMessageCommand, Unit>
+public class CreateMessageCommandHandler(
+    IMessageRepository messageRepository,
+    IMapper mapper,
+    IValidator<Message> validator) : IRequestHandler<CreateMessageCommand, Unit>
 {
     public async Task<Unit> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
     {
+        var message = mapper.Map<Message>(request.MessageDto);
         
-
-       // await repository.CreateAsync(message);
+        var validationResult = await validator.ValidateAsync(message, cancellationToken);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
+        
+        await messageRepository.CreateAsync(message);
+        
         return Unit.Value;
     }
 }
