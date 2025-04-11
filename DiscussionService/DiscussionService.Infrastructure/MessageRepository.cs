@@ -2,6 +2,7 @@
 using DiscussionService.Domain.Models;
 using DiscussionService.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace DiscussionService.Infrastructure;
@@ -26,9 +27,9 @@ public class MessageRepository : IMessageRepository
     public async Task CreateAsync(Message message) =>
         await _collection.InsertOneAsync(message);
 
-    public async Task DeleteAsync(Guid messageId) =>
+    public async Task DeleteAsync(ObjectId messageId) =>
         await _collection.DeleteOneAsync(m => m.Id == messageId);
 
-    public async Task UpdateAsync(Message message, Guid messageId) =>
+    public async Task UpdateAsync(Message message, ObjectId messageId) =>
         await _collection.ReplaceOneAsync(m => m.Id == messageId, message);
 }
