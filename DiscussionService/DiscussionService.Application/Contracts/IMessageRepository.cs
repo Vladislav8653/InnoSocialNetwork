@@ -1,7 +1,7 @@
 ﻿using DiscussionService.Domain.Models;
 using MongoDB.Bson;
 
-namespace DiscussionService.Application;
+namespace DiscussionService.Application.Contracts;
 
 public interface IMessageRepository
 {

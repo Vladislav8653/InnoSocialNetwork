@@ -1,11 +1,12 @@
 ﻿using DiscussionService.Application;
+using DiscussionService.Application.Contracts;
 using DiscussionService.Domain.Models;
 using DiscussionService.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace DiscussionService.Infrastructure;
+namespace DiscussionService.Infrastructure.Repositories;
 
 public class MessageRepository : IMessageRepository
 {

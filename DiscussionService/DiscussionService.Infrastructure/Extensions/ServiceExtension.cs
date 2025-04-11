@@ -1,4 +1,6 @@
 ﻿using DiscussionService.Application;
+using DiscussionService.Application.Contracts;
+using DiscussionService.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscussionService.Infrastructure.Extensions;
