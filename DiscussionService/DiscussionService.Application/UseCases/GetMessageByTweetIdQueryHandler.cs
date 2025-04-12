@@ -9,9 +9,9 @@ namespace DiscussionService.Application.UseCases;
 public class GetMessageByTweetIdQueryHandler(
     IMessageRepository messageRepository,
     IMapper mapper) : 
-    IRequestHandler<GetMessageByTweetIdQuery, MessageResponseDto>
+    IRequestHandler<GetMessageByIdQuery, MessageResponseDto>
 {
-    public async Task<MessageResponseDto> Handle(GetMessageByTweetIdQuery request, CancellationToken cancellationToken)
+    public async Task<MessageResponseDto> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken)
     {
         var message = await messageRepository.GetByIdAsync(request.Id);
         

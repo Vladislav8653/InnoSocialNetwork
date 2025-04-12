@@ -1,4 +1,5 @@
-﻿using DiscussionService.Domain.Models;
+﻿using DiscussionService.Application.Pagination;
+using DiscussionService.Domain.Models;
 using MongoDB.Bson;
 
 namespace DiscussionService.Application.Contracts;
@@ -10,5 +11,5 @@ public interface IMessageRepository
     Task CreateAsync(Message message);
     Task DeleteAsync(ObjectId messageId);
     Task UpdateAsync(Message message, ObjectId messageId);
-    
+    Task<PagedResult<Message>> GetPagedAsync(Guid tweetId, PageParams pageParams);
 }

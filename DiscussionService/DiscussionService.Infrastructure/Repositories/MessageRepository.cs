@@ -1,5 +1,6 @@
 ﻿using DiscussionService.Application;
 using DiscussionService.Application.Contracts;
+using DiscussionService.Application.Pagination;
 using DiscussionService.Domain.Models;
 using DiscussionService.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
@@ -33,4 +34,16 @@ public class MessageRepository : IMessageRepository
 
     public async Task UpdateAsync(Message message, ObjectId messageId) =>
         await _collection.ReplaceOneAsync(m => m.Id == messageId, message);
+    
+    public async Task<PagedResult<Message>> GetPagedAsync(Guid tweetId, PageParams pageParams)
+    {
+        var elements = await _collection
+            .Find(m => m.TweetId == tweetId)
+            .Skip((pageParams.Page - 1) * pageParams.PageSize)
+            .Limit(pageParams.PageSize)
+            .ToListAsync();
+        var count = await _collection.CountDocumentsAsync(_ => true);
+        return new PagedResult<Message>(elements, count);
+    }
+
 }

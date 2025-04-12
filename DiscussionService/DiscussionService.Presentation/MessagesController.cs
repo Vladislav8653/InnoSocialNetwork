@@ -1,4 +1,6 @@
 ﻿using DiscussionService.Application.Contracts;
+using DiscussionService.Application.DTOs;
+using DiscussionService.Application.Pagination;
 using DiscussionService.Application.Queries;
 using DiscussionService.Application.UseCases;
 using DiscussionService.Domain.Models;
@@ -12,16 +14,25 @@ namespace DiscussionService.Presentation;
 [Route("messages")]
 public class MessagesController(ISender sender) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("{tweetId:guid}")]
+    public async Task<IActionResult> GetAll([FromQuery] PageParams pageParams, Guid tweetId, 
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var query = new GetAllMessagesQuery
+        {
+            PageParams = pageParams,
+            TweetId = tweetId
+        };
+        
+        var messages = await sender.Send(query, cancellationToken);
+        
+        return Ok(messages);
     }
     
-    [HttpGet]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetById(ObjectId id)
     {
-        var query = new GetMessageByTweetIdQuery
+        var query = new GetMessageByIdQuery
         {
             Id = id
         };
@@ -32,7 +43,7 @@ public class MessagesController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Message message)
+    public async Task<IActionResult> Create([FromBody] MessageRequestDto messageRequestDto)
     {
         throw new NotImplementedException();
     }

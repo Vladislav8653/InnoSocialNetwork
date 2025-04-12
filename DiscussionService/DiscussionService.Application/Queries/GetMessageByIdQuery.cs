@@ -4,7 +4,7 @@ using MongoDB.Bson;
 
 namespace DiscussionService.Application.Queries;
 
-public record GetMessageByTweetIdQuery : IRequest<MessageResponseDto>
+public record GetMessageByIdQuery : IRequest<MessageResponseDto>
 {
     public ObjectId Id { get; init; }
 }
