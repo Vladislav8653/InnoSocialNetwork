@@ -1,4 +1,5 @@
 ﻿# Custom files and folders
+appsettings.Development.json
 global.json
 Migrations/
 

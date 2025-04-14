@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +15,7 @@ public static class ServiceExtensions
 {
     public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
         services.AddDbContext<ApplicationContext>(opts =>
-            opts.UseNpgsql(configuration.GetConnectionString("sqlConnection")));
+            opts.UseNpgsql(configuration["PostgresConnectionString"]));
     
     public static void ConfigureIdentity(this IServiceCollection services)
     {
