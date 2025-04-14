@@ -1,6 +1,5 @@
 using DiscussionService.Application;
 using DiscussionService.Infrastructure.Extensions;
-using DiscussionService.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureMongoDb(builder.Configuration);
@@ -10,8 +9,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).Assembly));
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
 app.ConfigureExceptionHandler();
 app.UseRouting();
 app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.Run();
