@@ -3,8 +3,8 @@ using DiscussionService.Infrastructure.Extensions;
 using DiscussionService.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.ConfigureMongoDb(builder.Configuration);
 builder.Services.ConfigureRepository();
-builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddValidators();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMediatR(cfg => 

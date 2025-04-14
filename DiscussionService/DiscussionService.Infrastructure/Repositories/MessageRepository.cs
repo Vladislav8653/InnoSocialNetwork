@@ -12,9 +12,8 @@ public class MessageRepository : IMessageRepository
 {
     private readonly IMongoCollection<Message> _collection;
 
-    public MessageRepository(IOptions<MongoDbSettings> settings)
+    public MessageRepository(IOptions<MongoDbSettings> settings, IMongoClient client)
     {
-        var client = new MongoClient(settings.Value.ConnectionString);
         var database = client.GetDatabase(settings.Value.DatabaseName);
         _collection = database.GetCollection<Message>(settings.Value.MessageDocument);
     }
