@@ -21,8 +21,8 @@ public static class ExceptionMiddlewareExtensions
                     var error = contextFeature.Error;
                     var exceptionDetails = new ExceptionDetails()
                     {
-                        Message = error.Message, // сообщение исключения
-                        Type = error.GetType().Name, // название исключения
+                        Message = error.Message, 
+                        Type = error.GetType().Name,
                     };
                     var response = context.Response;
                     response.ContentType = "application/json";

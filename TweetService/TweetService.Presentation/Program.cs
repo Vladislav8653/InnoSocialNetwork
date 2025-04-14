@@ -14,5 +14,4 @@ var app = builder.Build();
 app.ConfigureExceptionHandler();
 app.UseRouting();
 app.MapControllers();
-//app.ApplyMigrations();
 app.Run();
