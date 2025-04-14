@@ -1,7 +1,7 @@
 ﻿namespace TweetService.Application.Pagination;
 
-public class PageParams(int page, int pageSize)
+public record PageParams(int Page = 1, int PageSize = 10)
 {
-    public int Page { get; } = page;
-    public int PageSize { get; } = pageSize;
+    public int Page { get; init; } = Page;
+    public int PageSize { get; init; } = PageSize;
 }

@@ -1,6 +1,8 @@
-﻿namespace TweetService.Application.Contracts.RepositoryContracts;
+﻿using TweetService.Domain.Models;
 
-public interface ITweetRepository
+namespace TweetService.Application.Contracts.RepositoryContracts;
+
+public interface ITweetRepository : IRepositoryBase<Tweet>
 {
     
 }

@@ -5,6 +5,7 @@ namespace TweetService.Application.UseCases.Commands.Tweet.UpdateTweet;
 
 public record UpdateTweetCommand : IRequest<Unit>
 {
-    public Guid Id { get; init; }
-    public TweetRequestToDto TweetRequestToDto { get; init; }
+    public string? UserId {get; init; } 
+    public Guid TweetId { get; init; }
+    public TweetRequestToDto NewTweet { get; init; }
 }
