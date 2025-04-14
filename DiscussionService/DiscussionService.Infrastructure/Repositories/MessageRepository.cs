@@ -1,5 +1,4 @@
-﻿using DiscussionService.Application;
-using DiscussionService.Application.Contracts;
+﻿using DiscussionService.Application.Contracts;
 using DiscussionService.Application.Pagination;
 using DiscussionService.Domain.Models;
 using DiscussionService.Infrastructure.Settings;

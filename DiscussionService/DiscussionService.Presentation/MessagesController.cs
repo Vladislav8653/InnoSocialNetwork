@@ -1,9 +1,7 @@
-﻿using DiscussionService.Application.Contracts;
+﻿using DiscussionService.Application.Commands;
 using DiscussionService.Application.DTOs;
 using DiscussionService.Application.Pagination;
 using DiscussionService.Application.Queries;
-using DiscussionService.Application.UseCases;
-using DiscussionService.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -11,7 +9,7 @@ using MongoDB.Bson;
 namespace DiscussionService.Presentation;
 
 [ApiController]
-[Route("messages")]
+[Route("api/messages")]
 public class MessagesController(ISender sender) : ControllerBase
 {
     [HttpGet("{tweetId:guid}")]
@@ -45,18 +43,40 @@ public class MessagesController(ISender sender) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] MessageRequestDto messageRequestDto)
     {
-        throw new NotImplementedException();
+        var query = new CreateMessageCommand
+        {
+            MessageDto = messageRequestDto
+        };
+        
+        var response = await sender.Send(query);
+        
+        return NoContent();
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(ObjectId id)
     {
-        throw new NotImplementedException();
+        var query = new DeleteMessageCommand
+        {
+            MessageId = id
+        };
+        
+        var response = await sender.Send(query);
+        
+        return NoContent();
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Message message)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(ObjectId id, [FromBody] MessageRequestDto message)
     {
-        throw new NotImplementedException();
+        var query = new UpdateMessageCommand
+        {
+            MessageId = id,
+            MessageDto = message
+        };
+        
+        var response = await sender.Send(query);
+        
+        return NoContent();
     }
 }

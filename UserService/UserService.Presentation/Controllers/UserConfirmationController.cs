@@ -10,7 +10,7 @@ namespace UserService.Presentation.Controllers;
 
 [Route("api/confirm")]
 [ApiController]
-public class ConfirmUserController(IMediator mediator): ControllerBase
+public class UserConfirmationController(IMediator mediator): ControllerBase
 {
     [Authorize]
     [HttpPost("confirm-email")]

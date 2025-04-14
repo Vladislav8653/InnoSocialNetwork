@@ -7,8 +7,8 @@ using UserService.Application.UseCases.Commands.ResetUserCommands.SendResetEmail
 namespace UserService.Presentation.Controllers;
 
 [ApiController]
-[Route("reset")]
-public class ResetUserController(IMediator mediator) : ControllerBase
+[Route("api/reset")]
+public class UserResetController(IMediator mediator) : ControllerBase
 {
     [Route("send-email")]
     [HttpPost]

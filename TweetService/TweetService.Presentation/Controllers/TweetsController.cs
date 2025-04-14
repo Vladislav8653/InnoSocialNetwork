@@ -13,8 +13,8 @@ using TweetService.Application.UseCases.Queries.Tweet.GetTweets;
 namespace TweetService.Presentation.Controllers;
 
 [ApiController]
-[Route("tweets")]
-public class TweetController(ISender sender) : ControllerBase
+[Route("api/tweets")]
+public class TweetsController(ISender sender) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetTweets([FromQuery] PageParams pageParams, CancellationToken cancellationToken)

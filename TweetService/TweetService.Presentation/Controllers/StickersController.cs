@@ -13,8 +13,8 @@ namespace TweetService.Presentation.Controllers;
 
 
 [ApiController]
-[Route("stickers")]
-public class StickerController(ISender sender) : ControllerBase
+[Route("api/stickers")]
+public class StickersController(ISender sender) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetStickers([FromQuery] PageParams pageParams, CancellationToken cancellationToken)
