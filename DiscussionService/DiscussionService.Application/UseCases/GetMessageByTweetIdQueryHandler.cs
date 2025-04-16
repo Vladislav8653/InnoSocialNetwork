@@ -13,7 +13,7 @@ public class GetMessageByTweetIdQueryHandler(
 {
     public async Task<MessageResponseDto> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken)
     {
-        var message = await messageRepository.GetByIdAsync(request.Id);
+        var message = await messageRepository.GetByIdAsync(request.Id, cancellationToken);
         
         var messageDto = mapper.Map<MessageResponseDto>(message);
         

@@ -10,11 +10,11 @@ public class DeleteMessageCommandHandler (
 {
     public async Task<Unit> Handle(DeleteMessageCommand request, CancellationToken cancellationToken)
     {
-        var message = await messageRepository.GetByIdAsync(request.MessageId);
+        var message = await messageRepository.GetByIdAsync(request.MessageId, cancellationToken);
         if (message is null)
             throw new InvalidOperationException($"Message with id {request.MessageId} not found");
         
-        await messageRepository.DeleteAsync(request.MessageId);
+        await messageRepository.DeleteAsync(request.MessageId, cancellationToken);
         
         return Unit.Value;
     }

@@ -18,29 +18,29 @@ public class MessageRepository : IMessageRepository
         _collection = database.GetCollection<Message>(settings.Value.MessageDocument);
     }
     
-    public async Task<Message> GetByIdAsync(ObjectId id) =>
-        await _collection.Find(message => message.Id == id).SingleOrDefaultAsync();
+    public async Task<Message?> GetByIdAsync(ObjectId id, CancellationToken cancellationToken) =>
+        await _collection.Find(message => message.Id == id).SingleOrDefaultAsync(cancellationToken);
 
-    public async Task<IEnumerable<Message>> GetAllAsync(Guid tweetId) => 
-        await _collection.Find(m => m.TweetId == tweetId).ToListAsync();
+    public async Task<IEnumerable<Message>> GetAllAsync(Guid tweetId, CancellationToken cancellationToken) => 
+        await _collection.Find(m => m.TweetId == tweetId).ToListAsync(cancellationToken);
 
-    public async Task CreateAsync(Message message) =>
-        await _collection.InsertOneAsync(message);
+    public async Task CreateAsync(Message message, CancellationToken cancellationToken) =>
+        await _collection.InsertOneAsync(message, cancellationToken: cancellationToken);
 
-    public async Task DeleteAsync(ObjectId messageId) =>
-        await _collection.DeleteOneAsync(m => m.Id == messageId);
+    public async Task DeleteAsync(ObjectId messageId, CancellationToken cancellationToken) =>
+        await _collection.DeleteOneAsync(m => m.Id == messageId,  cancellationToken);
 
-    public async Task UpdateAsync(Message message, ObjectId messageId) =>
-        await _collection.ReplaceOneAsync(m => m.Id == messageId, message);
+    public async Task UpdateAsync(Message message, ObjectId messageId, CancellationToken cancellationToken) =>
+        await _collection.ReplaceOneAsync(m => m.Id == messageId, message, cancellationToken: cancellationToken);
     
-    public async Task<PagedResult<Message>> GetPagedAsync(Guid tweetId, PageParams pageParams)
+    public async Task<PagedResult<Message>> GetPagedAsync(Guid tweetId, PageParams pageParams, CancellationToken cancellationToken)
     {
         var elements = await _collection
             .Find(m => m.TweetId == tweetId)
             .Skip((pageParams.Page - 1) * pageParams.PageSize)
             .Limit(pageParams.PageSize)
-            .ToListAsync();
-        var count = await _collection.CountDocumentsAsync(_ => true);
+            .ToListAsync(cancellationToken);
+        var count = await _collection.CountDocumentsAsync(_ => true, cancellationToken: cancellationToken);
         return new PagedResult<Message>(elements, count);
     }
 

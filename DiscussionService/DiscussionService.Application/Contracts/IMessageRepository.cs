@@ -6,10 +6,10 @@ namespace DiscussionService.Application.Contracts;
 
 public interface IMessageRepository
 {
-    Task<Message> GetByIdAsync(ObjectId id);
-    Task<IEnumerable<Message>> GetAllAsync(Guid tweetId);
-    Task CreateAsync(Message message);
-    Task DeleteAsync(ObjectId messageId);
-    Task UpdateAsync(Message message, ObjectId messageId);
-    Task<PagedResult<Message>> GetPagedAsync(Guid tweetId, PageParams pageParams);
+    Task<Message?> GetByIdAsync(ObjectId id, CancellationToken cancellationToken);
+    Task<IEnumerable<Message>> GetAllAsync(Guid tweetId, CancellationToken cancellationToken);
+    Task CreateAsync(Message message, CancellationToken cancellationToken);
+    Task DeleteAsync(ObjectId messageId, CancellationToken cancellationToken);
+    Task UpdateAsync(Message message, ObjectId messageId, CancellationToken cancellationToken);
+    Task<PagedResult<Message>> GetPagedAsync(Guid tweetId, PageParams pageParams, CancellationToken cancellationToken);
 }

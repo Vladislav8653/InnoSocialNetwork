@@ -15,7 +15,7 @@ public class UpdateMessageCommandHandler(
 {
     public async Task<Unit> Handle(UpdateMessageCommand request, CancellationToken cancellationToken)
     {
-        var message = await messageRepository.GetByIdAsync(request.MessageId);
+        var message = await messageRepository.GetByIdAsync(request.MessageId, cancellationToken);
         if (message is null)
             throw new InvalidOperationException($"Message with id {request.MessageId} not found");
             
@@ -25,7 +25,7 @@ public class UpdateMessageCommandHandler(
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
         
-        await messageRepository.UpdateAsync(message, request.MessageId);
+        await messageRepository.UpdateAsync(message, request.MessageId, cancellationToken);
         
         return Unit.Value;
     }

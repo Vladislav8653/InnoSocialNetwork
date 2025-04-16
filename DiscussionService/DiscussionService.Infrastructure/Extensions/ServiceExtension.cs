@@ -17,7 +17,8 @@ public static class ServiceExtension
 {
     public static void ConfigureRepository(this IServiceCollection services)
     {
-        services.AddScoped<IMessageRepository, MessageRepository>();
+        services.AddScoped<MessageRepository>();
+        services.AddScoped<IMessageRepository, CachedMessageRepository>();
     }
     
     public static void AddValidators(this IServiceCollection services)
@@ -34,6 +35,11 @@ public static class ServiceExtension
             return new MongoClient(settings.ConnectionString);
         });
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+    }
+
+    public static void ConfigureCacheExpireTime(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<CacheExpireTimeSettings>(configuration.GetSection("CacheExpireTimeSettings"));
     }
     
 }

@@ -15,7 +15,7 @@ public class GetAllMessagesQueryHandler(
     public async Task<PagedResult<MessageResponseDto>> Handle(GetAllMessagesQuery request, CancellationToken cancellationToken)
     {
         var messages = await messageRepository
-            .GetPagedAsync(request.TweetId, request.PageParams);
+            .GetPagedAsync(request.TweetId, request.PageParams, cancellationToken);
         
         var messagesResponseDto = mapper.Map<IEnumerable<MessageResponseDto>>(messages.Items);
         

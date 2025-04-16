@@ -20,7 +20,7 @@ public class CreateMessageCommandHandler(
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
         
-        await messageRepository.CreateAsync(message);
+        await messageRepository.CreateAsync(message, cancellationToken);
         
         return Unit.Value;
     }

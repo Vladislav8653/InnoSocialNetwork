@@ -28,46 +28,48 @@ public class MessagesController(ISender sender) : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(ObjectId id)
+    public async Task<IActionResult> GetById(ObjectId id, CancellationToken cancellationToken)
     {
         var query = new GetMessageByIdQuery
         {
             Id = id
         };
         
-        var response = await sender.Send(query);
+        var response = await sender.Send(query, cancellationToken);
         
         return Ok(response);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] MessageRequestDto messageRequestDto)
+    public async Task<IActionResult> Create([FromBody] MessageRequestDto messageRequestDto, 
+        CancellationToken cancellationToken)
     {
         var query = new CreateMessageCommand
         {
             MessageDto = messageRequestDto
         };
         
-        var response = await sender.Send(query);
+        var response = await sender.Send(query, cancellationToken);
         
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(ObjectId id)
+    public async Task<IActionResult> Delete(ObjectId id, CancellationToken cancellationToken)
     {
         var query = new DeleteMessageCommand
         {
             MessageId = id
         };
         
-        var response = await sender.Send(query);
+        var response = await sender.Send(query, cancellationToken);
         
         return NoContent();
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(ObjectId id, [FromBody] MessageRequestDto message)
+    public async Task<IActionResult> Update(ObjectId id, [FromBody] MessageRequestDto message,
+        CancellationToken cancellationToken)
     {
         var query = new UpdateMessageCommand
         {
@@ -75,7 +77,7 @@ public class MessagesController(ISender sender) : ControllerBase
             MessageDto = message
         };
         
-        var response = await sender.Send(query);
+        var response = await sender.Send(query, cancellationToken);
         
         return NoContent();
     }
