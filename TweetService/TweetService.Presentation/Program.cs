@@ -1,7 +1,8 @@
 using TweetService.Application;
 using TweetService.Infrastructure.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);   
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.ConfigureKafka(builder.Configuration);
 builder.Services.ConfigureRepository();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddValidators();

@@ -1,12 +1,14 @@
 ﻿using FluentValidation;
 using MediatR;
+using TweetService.Application.Contracts.ProducerContracts;
 using TweetService.Application.Contracts.RepositoryContracts;
 using TweetService.Application.Exceptions;
 
 namespace TweetService.Application.UseCases.Commands.Tweet.DeleteTweet;
 
 public class DeleteTweetCommandHandler(
-    ITweetRepository tweetRepository) :
+    ITweetRepository tweetRepository,
+    ITweetDeletedProducer tweetDeletedProducer) :
     IRequestHandler<DeleteTweetCommand, Unit>
 {
     public async Task<Unit> Handle(DeleteTweetCommand request, CancellationToken cancellationToken)
@@ -29,6 +31,8 @@ public class DeleteTweetCommandHandler(
         }
         
         await tweetRepository.DeleteAsync(tweet, cancellationToken);
+        
+        await tweetDeletedProducer.PublishTweetDeletedEvent(request.TweetId);
         
         return Unit.Value;
     }

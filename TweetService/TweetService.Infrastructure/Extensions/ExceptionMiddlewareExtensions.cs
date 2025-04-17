@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using AutoMapper;
+using Confluent.Kafka;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -36,6 +37,7 @@ public static class ExceptionMiddlewareExtensions
                         ValidationException => (int)HttpStatusCode.BadRequest,
                         AutoMapperMappingException => (int)HttpStatusCode.BadRequest,
                         UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+                        ProduceException<string, string> => (int)HttpStatusCode.InternalServerError,
                         _ => (int)HttpStatusCode.InternalServerError
                     };
                     var result = JsonSerializer.Serialize(exceptionDetails);
