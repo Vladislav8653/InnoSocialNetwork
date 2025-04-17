@@ -1,5 +1,6 @@
 ﻿using DiscussionService.Application.Contracts;
 using DiscussionService.Application.Validation;
+using DiscussionService.Infrastructure.Consumers;
 using DiscussionService.Infrastructure.Repositories;
 using DiscussionService.Infrastructure.Settings;
 using FluentValidation;
@@ -29,8 +30,6 @@ public static class ServiceExtension
         });
     }
 
-
-
     public static void AddValidators(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<MessageValidator>();
@@ -50,6 +49,13 @@ public static class ServiceExtension
     public static void ConfigureCacheExpireTime(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<CacheExpireTimeSettings>(configuration.GetSection("CacheExpireTimeSettings"));
+    }
+    
+    public static void ConfigureKafka(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<KafkaSettings>(configuration.GetSection("KafkaSettings"));
+        
+        services.AddHostedService<TweetDeletedConsumer>();
     }
     
 }
