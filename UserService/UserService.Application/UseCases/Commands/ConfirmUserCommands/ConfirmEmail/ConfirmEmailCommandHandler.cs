@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using UserService.Domain.CustomExceptions;
+using UserService.Application.Exceptions;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Commands.ConfirmUserCommands.ConfirmEmail;
@@ -20,7 +20,7 @@ public class ConfirmEmailCommandHandler
         var user = await userManager.FindByIdAsync(userIdGuid.ToString());
         if (user == null)
         {
-            throw new InvalidOperationException($"User with id {request.UserId} not found");
+            throw new NotFoundException($"User with id {request.UserId} not found");
         }
 
         var result = await userManager.ConfirmEmailAsync(user, request.ConfirmationCode);

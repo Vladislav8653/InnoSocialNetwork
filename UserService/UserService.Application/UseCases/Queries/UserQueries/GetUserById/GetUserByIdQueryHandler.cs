@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using UserService.Domain.CustomExceptions;
+using UserService.Application.Exceptions;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Queries.UserQueries.GetUserById;
@@ -15,7 +15,7 @@ public class GetUserByIdQueryHandler(
         
         if (user == null)
         {
-            throw new UserNotFoundException("User not found");
+            throw new NotFoundException("User not found");
         }
         
         return user;

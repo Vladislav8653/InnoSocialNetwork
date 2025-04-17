@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using UserService.Application.Exceptions;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Commands.ResetUserCommands.ResetPassword;
@@ -13,14 +14,14 @@ public class ResetPasswordCommandHandler(
         var user = await userManager.FindByEmailAsync(request.ResetPasswordDto.Email);
         if (user == null)
         {
-            throw new InvalidOperationException($"User with email {request.ResetPasswordDto.Email} not found");
+            throw new NotFoundException($"User with email {request.ResetPasswordDto.Email} not found");
         }
 
         var result = await userManager.ResetPasswordAsync(user,
             request.ResetPasswordDto.ResetToken, request.ResetPasswordDto.NewPassword);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException("Invalid token.");
+            throw new UnauthorizedAccessException("Invalid token.");
         }
         
         return "Password reset successfully.";

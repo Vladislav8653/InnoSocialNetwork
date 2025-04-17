@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UserService.Application.Contracts.SmtpContracts;
+using UserService.Application.Exceptions;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Commands.ResetUserCommands.SendResetEmail;
@@ -15,7 +16,7 @@ public class SendResetEmailCommandHandler(
         var user = await userManager.FindByEmailAsync(request.NewPasswordDto.Email);
         if (user == null)
         {
-            throw new InvalidOperationException($"User with email {request.NewPasswordDto.Email} not found");
+            throw new NotFoundException($"User with email {request.NewPasswordDto.Email} not found");
         }
         
         const string subject = "Reset Password";

@@ -1,3 +1,3 @@
-﻿namespace UserService.Domain.CustomExceptions;
+﻿namespace UserService.Application.Exceptions;
 
 public class EmailNotConfirmedException(string message) : Exception(message);

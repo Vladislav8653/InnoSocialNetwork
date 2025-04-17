@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using UserService.Application.Contracts.AuthenticationContracts;
 using UserService.Application.DTO;
-using UserService.Domain.CustomExceptions;
+using UserService.Application.Exceptions;
 using UserService.Domain.Models;
 
 namespace UserService.Infrastructure;
@@ -34,7 +34,7 @@ public class AuthenticationManager(
         var jwtSettings = configuration.GetSection("JwtSettings");
         var refreshTokenLifeTimeStr = jwtSettings.GetSection("RefreshTokenLifeTime").Value;
         if (refreshTokenLifeTimeStr is null)
-            throw new InvalidOperationException("RefreshTokenLifeTime is null");
+            throw new UnauthorizedAccessException("RefreshTokenLifeTime is null");
         var refreshTokenLifeTime = int.Parse(refreshTokenLifeTimeStr);
         
         var signingCredentials = tokenService.GetSigningCredentials();
@@ -68,7 +68,7 @@ public class AuthenticationManager(
     {
         var user = await userManager.FindByIdAsync(userId);
         if (user == null)
-            throw new UserNotFoundException("User not found.");
+            throw new NotFoundException("User not found.");
 
         user.RefreshToken = null;
         await userManager.UpdateAsync(user);

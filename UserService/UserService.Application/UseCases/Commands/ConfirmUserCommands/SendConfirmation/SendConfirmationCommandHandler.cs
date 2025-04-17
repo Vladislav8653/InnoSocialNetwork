@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UserService.Application.Contracts.SmtpContracts;
+using UserService.Application.Exceptions;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Commands.ConfirmUserCommands.SendConfirmation;
@@ -21,12 +22,12 @@ public class SendConfirmationCommandHandler(
         var user = await userManager.FindByIdAsync(userIdGuid.ToString());
         if (user == null)
         {
-            throw new InvalidOperationException($"User with id {request.UserId} not found");
+            throw new NotFoundException($"User with id {request.UserId} not found");
         }
 
         if (user.EmailConfirmed)
         {
-            throw new InvalidOperationException($"User with email {user.Email} already confirmed");
+            throw new NotFoundException($"User with email {user.Email} already confirmed");
         }
         
         var emailBody = $"Your confirmation code: {await userManager.GenerateEmailConfirmationTokenAsync(user)}";
