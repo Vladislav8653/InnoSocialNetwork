@@ -21,9 +21,6 @@ public class MessageRepository : IMessageRepository
     public async Task<Message?> GetByIdAsync(ObjectId id, CancellationToken cancellationToken) =>
         await _collection.Find(message => message.Id == id).SingleOrDefaultAsync(cancellationToken);
 
-    public async Task<IEnumerable<Message>> GetAllAsync(Guid tweetId, CancellationToken cancellationToken) => 
-        await _collection.Find(m => m.TweetId == tweetId).ToListAsync(cancellationToken);
-
     public async Task CreateAsync(Message message, CancellationToken cancellationToken) =>
         await _collection.InsertOneAsync(message, cancellationToken: cancellationToken);
 

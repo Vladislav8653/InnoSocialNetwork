@@ -3,6 +3,7 @@ using DiscussionService.Application.Contracts;
 using DiscussionService.Application.DTOs;
 using DiscussionService.Application.Queries;
 using MediatR;
+using MongoDB.Bson;
 
 namespace DiscussionService.Application.UseCases;
 
@@ -13,7 +14,12 @@ public class GetMessageByTweetIdQueryHandler(
 {
     public async Task<MessageResponseDto> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken)
     {
-        var message = await messageRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (!ObjectId.TryParse(request.Id, out var messageId))
+        {
+            throw new InvalidOperationException("Invalid message id");
+        }
+        
+        var message = await messageRepository.GetByIdAsync(messageId, cancellationToken);
         
         var messageDto = mapper.Map<MessageResponseDto>(message);
         

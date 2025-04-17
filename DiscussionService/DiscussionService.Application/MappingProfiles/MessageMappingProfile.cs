@@ -9,6 +9,8 @@ public class MessageMappingProfile : Profile
     public MessageMappingProfile()
     {
         CreateMap<MessageRequestDto, Message>();
-        CreateMap<Message, MessageResponseDto>();
+        CreateMap<Message, MessageResponseDto>()
+            .ForMember(m => m.Id, opt => 
+                opt.MapFrom(src => src.Id.ToString()));
     }
 }

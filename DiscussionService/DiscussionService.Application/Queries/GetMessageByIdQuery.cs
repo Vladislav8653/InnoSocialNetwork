@@ -6,5 +6,5 @@ namespace DiscussionService.Application.Queries;
 
 public record GetMessageByIdQuery : IRequest<MessageResponseDto>
 {
-    public ObjectId Id { get; init; }
+    public string Id { get; init; }
 }

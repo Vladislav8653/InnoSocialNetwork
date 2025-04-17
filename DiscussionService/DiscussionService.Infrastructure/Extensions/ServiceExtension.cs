@@ -20,7 +20,17 @@ public static class ServiceExtension
         services.AddScoped<MessageRepository>();
         services.AddScoped<IMessageRepository, CachedMessageRepository>();
     }
-    
+
+    public static void AddRedisCache(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetSection("RedisServerAddress").Value;
+        });
+    }
+
+
+
     public static void AddValidators(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<MessageValidator>();

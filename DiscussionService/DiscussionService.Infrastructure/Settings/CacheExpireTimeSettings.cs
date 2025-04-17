@@ -2,6 +2,6 @@
 
 public record CacheExpireTimeSettings
 {
-    public long ImMemoryCacheExpireTimeMinutes { get; init; }
+    public long MemoryCacheExpireTimeMinutes { get; init; }
     public long RedisCacheExpireTimeMinutes { get; init; }
 }

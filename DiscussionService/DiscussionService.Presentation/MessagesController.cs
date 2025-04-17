@@ -28,7 +28,7 @@ public class MessagesController(ISender sender) : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(ObjectId id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
     {
         var query = new GetMessageByIdQuery
         {
