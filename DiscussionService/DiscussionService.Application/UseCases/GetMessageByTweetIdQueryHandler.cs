@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using DiscussionService.Application.Contracts;
 using DiscussionService.Application.DTOs;
+using DiscussionService.Application.Exceptions;
 using DiscussionService.Application.Queries;
 using MediatR;
 using MongoDB.Bson;
@@ -16,7 +18,7 @@ public class GetMessageByTweetIdQueryHandler(
     {
         if (!ObjectId.TryParse(request.Id, out var messageId))
         {
-            throw new InvalidOperationException("Invalid message id");
+            throw new ValidationException("Invalid message id");
         }
         
         var message = await messageRepository.GetByIdAsync(messageId, cancellationToken);

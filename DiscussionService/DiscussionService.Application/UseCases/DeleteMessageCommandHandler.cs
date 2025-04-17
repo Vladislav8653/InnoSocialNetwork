@@ -1,5 +1,6 @@
 ﻿using DiscussionService.Application.Commands;
 using DiscussionService.Application.Contracts;
+using DiscussionService.Application.Exceptions;
 using MediatR;
 
 namespace DiscussionService.Application.UseCases;
@@ -12,7 +13,7 @@ public class DeleteMessageCommandHandler (
     {
         var message = await messageRepository.GetByIdAsync(request.MessageId, cancellationToken);
         if (message is null)
-            throw new InvalidOperationException($"Message with id {request.MessageId} not found");
+            throw new NotFoundException($"Message with id {request.MessageId} not found");
         
         await messageRepository.DeleteAsync(request.MessageId, cancellationToken);
         

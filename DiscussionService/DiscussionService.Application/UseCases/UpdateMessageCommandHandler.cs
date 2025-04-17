@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DiscussionService.Application.Commands;
 using DiscussionService.Application.Contracts;
+using DiscussionService.Application.Exceptions;
 using DiscussionService.Domain.Models;
 using FluentValidation;
 using MediatR;
@@ -17,7 +18,7 @@ public class UpdateMessageCommandHandler(
     {
         var message = await messageRepository.GetByIdAsync(request.MessageId, cancellationToken);
         if (message is null)
-            throw new InvalidOperationException($"Message with id {request.MessageId} not found");
+            throw new NotFoundException($"Message with id {request.MessageId} not found");
             
         mapper.Map(request.MessageDto, message);
         
