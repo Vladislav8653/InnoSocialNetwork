@@ -2,6 +2,7 @@
 using MediatR;
 using TweetService.Application.Contracts.RepositoryContracts;
 using TweetService.Application.DTOs.TweetsDto;
+using TweetService.Application.Exceptions;
 
 namespace TweetService.Application.UseCases.Queries.Tweet.GetTweetById;
 
@@ -16,7 +17,7 @@ public class GetTweetByIdCommandHandler(
             tweet => tweet.Id == request.Id,false, cancellationToken);
         var tweet = tweets.FirstOrDefault();
         if (tweet is null)
-            throw new InvalidOperationException($"Tweet with id {request.Id} not found");
+            throw new NotFoundException($"Tweet with id {request.Id} not found");
         
         var tweetResponseDto = mapper.Map<TweetResponseDto>(tweet);
         

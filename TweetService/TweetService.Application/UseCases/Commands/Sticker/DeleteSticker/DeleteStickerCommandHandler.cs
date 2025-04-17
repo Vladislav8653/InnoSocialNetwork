@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using TweetService.Application.Contracts.RepositoryContracts;
+using TweetService.Application.Exceptions;
 
 namespace TweetService.Application.UseCases.Commands.Sticker.DeleteSticker;
 
@@ -20,7 +21,7 @@ public class DeleteStickerCommandHandler(
                 false, cancellationToken);
         var sticker = stickers.FirstOrDefault();
         if (sticker is null)
-            throw new InvalidOperationException($"Sticker with id {request.StickerId} not found");
+            throw new NotFoundException($"Sticker with id {request.StickerId} not found");
         
         if (sticker.UserId != userIdGuid)
         {

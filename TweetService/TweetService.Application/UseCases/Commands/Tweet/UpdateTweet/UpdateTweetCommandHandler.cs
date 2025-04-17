@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using TweetService.Application.Contracts.RepositoryContracts;
+using TweetService.Application.Exceptions;
 
 namespace TweetService.Application.UseCases.Commands.Tweet.UpdateTweet;
 
@@ -22,7 +23,7 @@ public class UpdateTweetCommandHandler(
             tweet.Id == request.TweetId,false, cancellationToken);
         var tweet = tweets.FirstOrDefault();
         if (tweet is null)
-            throw new InvalidOperationException($"Tweet with id {request.TweetId} not found");
+            throw new NotFoundException($"Tweet with id {request.TweetId} not found");
         
         if (tweet.WriterId != userIdGuid)
         {
