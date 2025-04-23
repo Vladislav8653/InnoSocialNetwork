@@ -14,4 +14,9 @@ public class Notification
     public string Source { get; set; } 
     
     public DateTime CreatedAt { get; set; } 
+    public string HangfireJobId { get; set; }
+    public int MinutesBeforeDeadline { get; set; }
+    public DateTime ReminderTime => Deadline.AddMinutes(-MinutesBeforeDeadline);
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)] 
+    public DateTime Deadline { get; set; } 
 }
