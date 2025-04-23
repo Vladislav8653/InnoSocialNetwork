@@ -7,7 +7,7 @@ using NotificationsService.Application.DataTransferObjects.NotificationsDto;
 namespace NotificationsService.Application.UseCases.Queries.NotificationQueries.GetNotificationById;
 
 public class GetNotificationQueryHandler( 
-    INotificationsRepository repository,
+    INotificationRepository repository,
     IMapper mapper)
     : IRequestHandler<GetNotificationQuery, NotificationDto>
 {

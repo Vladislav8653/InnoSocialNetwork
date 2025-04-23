@@ -6,7 +6,7 @@ using NotificationsService.Application.CustomExceptions;
 namespace NotificationsService.Application.UseCases.Commands.NotificationCommands.DeleteNotification;
 
 public class DeleteNotificationCommandHandler(
-    INotificationsRepository repository) 
+    INotificationRepository repository) 
     : IRequestHandler<DeleteNotificationCommand>
 {
     public async Task<Unit> Handle(DeleteNotificationCommand request, CancellationToken cancellationToken)

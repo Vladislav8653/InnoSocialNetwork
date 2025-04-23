@@ -8,7 +8,7 @@ using NotificationsService.Domain.Models;
 namespace NotificationsService.Application.UseCases.Commands.NotificationCommands.CreateNotification;
 
 public class CreateNotificationCommandHandler(
-    INotificationsRepository repository,
+    INotificationRepository repository,
     IValidator<Notification> validator,
     IMapper mapper) 
     : IRequestHandler<CreateNotificationCommand, Notification>
