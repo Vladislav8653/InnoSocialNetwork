@@ -1,5 +1,6 @@
 using Hangfire;
 using MediatR;
+using NotificationsService.Infrastructure.BackgroundServices;
 using NotificationsService.Infrastructure.Extensions;
 
 
@@ -11,6 +12,7 @@ builder.Services.AddValidators();
 builder.Services.AddAuthorizationPolicy();
 builder.Services.ConfigureJwt(builder.Configuration);
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHostedService<EmailEventConsumerService>();
 builder.Services.ConfigureEmailService(builder.Configuration);
 builder.Services.ConfigureHangfire(builder.Configuration);
 
