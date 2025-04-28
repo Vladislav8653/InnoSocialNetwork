@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using NotificationsService.Application.Contracts.RepositoryContracts;
 using NotificationsService.Application.Contracts.ServicesContracts;
 using NotificationsService.Application.EmailService;
+using NotificationsService.Application.Settings;
 using NotificationsService.Application.Validation;
 using NotificationsService.Infrastructure.Repositories;
 
@@ -51,9 +52,12 @@ public static class ServiceExtensions
         services.AddHangfireServer();
         //services.AddScoped<IHangfireService, HangfireService>();
     }
+    
+    
 
-    public static void ConfigureEmailService(this IServiceCollection services)
+    public static void ConfigureEmailService(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<SmtpServiceSettings>(configuration.GetSection("SmtpServiceSettings"));
         services.AddSingleton<ISmtpService, SmtpService>();
     }
     

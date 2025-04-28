@@ -11,7 +11,7 @@ builder.Services.AddValidators();
 builder.Services.AddAuthorizationPolicy();
 builder.Services.ConfigureJwt(builder.Configuration);
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.ConfigureEmailService();
+builder.Services.ConfigureEmailService(builder.Configuration);
 builder.Services.ConfigureHangfire(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
