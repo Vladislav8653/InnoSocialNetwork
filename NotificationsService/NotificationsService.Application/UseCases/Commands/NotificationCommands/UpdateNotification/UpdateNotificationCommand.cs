@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using NotificationsService.Application.DataTransferObjects.NotificationsDto;
+using NotificationsService.Application.DTOs.NotificationsDto;
 
 namespace NotificationsService.Application.UseCases.Commands.NotificationCommands.UpdateNotification;
 
 public record UpdateNotificationCommand : IRequest<Unit>
 {
-    public NotificationDto NotificationDto { get; init; }
+    public NotificationRequestDto NotificationDto { get; init; }
 }

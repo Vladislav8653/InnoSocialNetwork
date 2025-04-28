@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NotificationsService.Application.DataTransferObjects.NotificationsDto;
+using NotificationsService.Application.DTOs.NotificationsDto;
 using NotificationsService.Application.UseCases.Commands.NotificationCommands.CreateNotification;
 using NotificationsService.Application.UseCases.Commands.NotificationCommands.DeleteNotification;
 using NotificationsService.Application.UseCases.Commands.NotificationCommands.UpdateNotification;
@@ -15,7 +15,7 @@ namespace NotificationsService.Presentation.Controllers;
 public class NotificationController(
     IMediator mediator) : Controller
 {
-    [HttpGet("getNotifications")]
+    [HttpGet]
     [Authorize(Policy = "User")]
     public async Task<IActionResult> GetNotifications(CancellationToken cancellationToken)
     {
@@ -25,7 +25,7 @@ public class NotificationController(
         return Ok(notifications);
     }
 
-    [HttpGet("getNotificationById/{id}")]
+    [HttpGet("{id:guid}")]
     [Authorize(Policy = "User")]
     public async Task<IActionResult> GetNotificationById(Guid id, CancellationToken cancellationToken)
     {
@@ -38,10 +38,10 @@ public class NotificationController(
         return Ok(notification);
     }
     
-    [HttpPost("addNotification")]
+    [HttpPost]
     [Authorize(Policy = "User")]
     public async Task<IActionResult> AddNotification(
-        [FromBody] NotificationDto notificationDto,
+        [FromBody] NotificationRequestDto notificationDto,
         CancellationToken cancellationToken)
     {
         var command = new CreateNotificationCommand
@@ -54,10 +54,10 @@ public class NotificationController(
         return NoContent();
     }
 
-    [HttpPut("updateNotification")]
+    [HttpPut]
     [Authorize(Policy = "User")]
     public async Task<IActionResult> UpdateNotification(
-        [FromBody] NotificationDto notificationDto,
+        [FromBody] NotificationRequestDto notificationDto,
         CancellationToken cancellationToken)
     {
         var command = new UpdateNotificationCommand
@@ -69,7 +69,7 @@ public class NotificationController(
         return NoContent();
     }
 
-    [HttpDelete("deleteNotification/{id}")]
+    [HttpDelete("{id:guid}")]
     [Authorize(Policy = "User")]
     public async Task<IActionResult> DeleteNotification(Guid id, CancellationToken cancellationToken)
     {

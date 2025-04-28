@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
 using MediatR;
 using NotificationsService.Application.Contracts.RepositoryContracts;
-using NotificationsService.Application.DataTransferObjects.NotificationsDto;
+using NotificationsService.Application.DTOs.NotificationsDto;
 
 namespace NotificationsService.Application.UseCases.Queries.NotificationQueries.GetAllNotifications;
 
 public class GetAllNotificationsQueryHandler(
     INotificationRepository repository,
     IMapper mapper)
-    : IRequestHandler<GetAllNotificationsQuery, IEnumerable<NotificationDto>>
+    : IRequestHandler<GetAllNotificationsQuery, IEnumerable<NotificationRequestDto>>
 {
-    public async Task<IEnumerable<NotificationDto>> Handle(
+    public async Task<IEnumerable<NotificationRequestDto>> Handle(
         GetAllNotificationsQuery request, 
         CancellationToken cancellationToken)
     {

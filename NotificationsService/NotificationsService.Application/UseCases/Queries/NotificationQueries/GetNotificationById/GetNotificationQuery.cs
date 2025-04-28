@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using NotificationsService.Application.DataTransferObjects.NotificationsDto;
+using NotificationsService.Application.DTOs.NotificationsDto;
 
 namespace NotificationsService.Application.UseCases.Queries.NotificationQueries.GetNotificationById;
 
-public record GetNotificationQuery : IRequest<NotificationDto>
+public record GetNotificationQuery : IRequest<NotificationRequestDto>
 {
    public Guid NotificationId { get; init; } 
 }

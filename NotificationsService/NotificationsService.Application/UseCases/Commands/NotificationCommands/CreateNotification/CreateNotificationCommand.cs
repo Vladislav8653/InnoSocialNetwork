@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using NotificationsService.Application.DataTransferObjects.NotificationsDto;
+using NotificationsService.Application.DTOs.NotificationsDto;
 using NotificationsService.Domain.Models;
 
 namespace NotificationsService.Application.UseCases.Commands.NotificationCommands.CreateNotification;
 
 public record CreateNotificationCommand : IRequest<Notification>
 {
-    public NotificationDto NotificationDto { get; set; }
+    public NotificationRequestDto NotificationDto { get; set; }
 }
