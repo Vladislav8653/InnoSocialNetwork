@@ -24,7 +24,7 @@ public class DeleteTweetCommandHandler(
         
         if (tweet.WriterId != userIdGuid)
         {
-            throw new UnauthorizedAccessException("User is not authorized to delete this product");
+            throw new UnauthorizedAccessException("User is not authorized to delete this sticker");
         }
         
         await tweetRepository.DeleteAsync(tweet, cancellationToken);

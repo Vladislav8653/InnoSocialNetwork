@@ -5,6 +5,6 @@ namespace TweetService.Application.UseCases.Commands.Tweet.CreateTweet;
 
 public record CreateTweetCommand : IRequest<Unit>
 {
-    public TweetRequestToDto NewTweet { get; init; }
+    public TweetRequestDto NewTweet { get; init; }
     public string? UserId {get; init; } 
 }

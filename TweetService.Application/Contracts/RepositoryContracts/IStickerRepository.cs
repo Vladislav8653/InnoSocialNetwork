@@ -1,6 +1,8 @@
-﻿namespace TweetService.Application.Contracts.RepositoryContracts;
+﻿using TweetService.Domain.Models;
 
-public interface IStickerRepository
+namespace TweetService.Application.Contracts.RepositoryContracts;
+
+public interface IStickerRepository: IRepositoryBase<Sticker>
 {
     
 }

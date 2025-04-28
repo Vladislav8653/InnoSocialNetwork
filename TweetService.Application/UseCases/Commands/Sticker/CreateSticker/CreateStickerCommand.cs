@@ -5,5 +5,6 @@ namespace TweetService.Application.UseCases.Commands.Sticker.CreateSticker;
 
 public record CreateStickerCommand : IRequest<Unit>
 {
-    public StickerRequestToDto StickerRequestToDto { get; init; }
+    public string? UserId {get; init; } 
+    public StickerRequestDto NewSticker { get; init; }
 }

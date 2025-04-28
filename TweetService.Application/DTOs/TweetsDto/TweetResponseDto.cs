@@ -1,6 +1,6 @@
 ﻿namespace TweetService.Application.DTOs.TweetsDto;
 
-public record TweetResponseToDto
+public record TweetResponseDto
 {
     public Guid Id { get; init; }
     public Guid WriterId { get; init; }
