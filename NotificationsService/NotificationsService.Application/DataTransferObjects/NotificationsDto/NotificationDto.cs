@@ -2,17 +2,14 @@
 
 public record NotificationDto
 {
-    public Guid Id { get; set; } 
-    public Guid TaskId { get; set; }
+    /*public Guid Id { get; set; } 
+    public string HangfireJobId { get; set; } = default!;*/
+    public string EventType { get; set; } = default!;
+    public string Source { get; set; } = default!;          
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public IEnumerable<Guid> TargetUsers { get; set; } = [];  
     
-    
-    public string Title { get; set; } 
-    
-    public DateTime Deadline { get; set; }
-    
-    public int MinutesBeforeDeadline { get; set; }
-    
-    public string UserTimeZone { get; set; }
-    
-    public string UserEmail { get; set; }
+    public string Title { get; set; } = default!;         // Заголовок уведомления
+    public string Body { get; set; } = default!;          // Основной текст
+    public string Channel { get; set; }   // Куда отправлять: "email", "in_app", "push"
 }
