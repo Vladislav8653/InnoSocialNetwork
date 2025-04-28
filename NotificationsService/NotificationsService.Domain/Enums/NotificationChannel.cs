@@ -1,6 +1,6 @@
 ﻿namespace NotificationsService.Domain.Enums;
 
-public enum NotificationChannels
+public enum NotificationChannel
 {
     Email,
     InApp
