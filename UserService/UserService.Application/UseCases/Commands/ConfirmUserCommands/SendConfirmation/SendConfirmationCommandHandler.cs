@@ -1,14 +1,14 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using UserService.Application.Contracts.SmtpContracts;
 using UserService.Application.Exceptions;
+using UserService.Application.Producers.EmailProducer;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Commands.ConfirmUserCommands.SendConfirmation;
 
 public class SendConfirmationCommandHandler(
-    ISmtpService smtpService,
+    KafkaEmailProducer kafkaEmailProducer,
     UserManager<User> userManager) : 
     IRequestHandler<SendConfirmationCommand, string>
 {
@@ -31,8 +31,15 @@ public class SendConfirmationCommandHandler(
         }
         
         var emailBody = $"Your confirmation code: {await userManager.GenerateEmailConfirmationTokenAsync(user)}";
-
-        await smtpService.SendEmailAsync(user.UserName!, user.Email!, "Confirm your email", emailBody);
+        
+        await kafkaEmailProducer.SendEmailAsync(new SendEmailEvent
+        {
+            ToName = user.UserName!, 
+            ToEmail = user.Email!, 
+            Subject = "Confirm your email", 
+            Body =  emailBody
+        });
+        
         return "Your confirmation code was sent on email.";
     }
 }

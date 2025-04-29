@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UserService.Domain.Models;
-using UserService.Application.Contracts.SmtpContracts;
 
 namespace UserService.Application.UseCases.Queries.UserQueries.GetAllUsers;
 

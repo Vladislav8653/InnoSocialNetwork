@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using UserService.Application.Contracts.SmtpContracts;
 using UserService.Application.Exceptions;
+using UserService.Application.Producers.EmailProducer;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Commands.ResetUserCommands.SendResetEmail;
 
 public class SendResetEmailCommandHandler(
     UserManager<User> userManager,
-    ISmtpService smtpService)
+    KafkaEmailProducer kafkaEmailProducer)
     : IRequestHandler<SendResetEmailCommand, string>
 {
     public async Task<string> Handle(SendResetEmailCommand request, CancellationToken cancellationToken)
@@ -21,8 +21,15 @@ public class SendResetEmailCommandHandler(
         
         const string subject = "Reset Password";
         var body = $"Your reset token: {await userManager.GeneratePasswordResetTokenAsync(user)}";
-        await smtpService.SendEmailAsync(
-            user.UserName!, user.Email!, subject, body);
+        
+        await kafkaEmailProducer.SendEmailAsync(new SendEmailEvent
+        {
+            ToName = user.UserName!, 
+            ToEmail = user.Email!, 
+            Subject = subject, 
+            Body =  body
+        });
+        
         return "Reset token sent successfully.";
     }
 }

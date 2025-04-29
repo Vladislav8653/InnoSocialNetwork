@@ -1,7 +1,5 @@
 using MediatR;
 using UserService.Application.Contracts.AuthenticationContracts;
-using UserService.Application.Contracts.SmtpContracts;
-using UserService.Application.EmailService;
 using UserService.Application.MappingProfiles;
 using UserService.Infrastructure;
 using UserService.Infrastructure.Extensions;
@@ -13,7 +11,7 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
-builder.Services.AddScoped<ISmtpService, SmtpService>();
+builder.Services.ConfigureKafka(builder.Configuration);
 builder.Services.AddHttpClient();
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.ConfigureIdentity();

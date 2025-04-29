@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using UserService.Application.Producers.EmailProducer;
+using UserService.Application.Settings;
 using UserService.Domain.Models;
 
 namespace UserService.Infrastructure.Extensions;
@@ -90,5 +92,11 @@ public static class ServiceExtensions
                 }
             });
         });
+    }
+
+    public static void ConfigureKafka(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<KafkaSettings>(configuration.GetSection("KafkaSettings"));
+        services.AddSingleton<KafkaEmailProducer>();
     }
 }
