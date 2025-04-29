@@ -7,9 +7,9 @@ namespace UserService.Application.UseCases.Commands.ResetUserCommands.ResetPassw
 
 public class ResetPasswordCommandHandler(
     UserManager<User> userManager)
-    : IRequestHandler<ResetPasswordCommand, string>
+    : IRequestHandler<ResetPasswordCommand, Unit>
 {
-    public async Task<string> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         var user = await userManager.FindByEmailAsync(request.ResetPasswordDto.Email);
         if (user == null)
@@ -24,6 +24,6 @@ public class ResetPasswordCommandHandler(
             throw new UnauthorizedAccessException("Invalid token.");
         }
         
-        return "Password reset successfully.";
+        return Unit.Value;
     }
 }

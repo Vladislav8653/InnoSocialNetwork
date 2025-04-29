@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using MediatR;
@@ -23,7 +24,7 @@ public class RefreshTokenCommandHandler(
         var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
         if (principal.Identity?.Name is null)
         {
-            throw new UnauthorizedAccessException("Invalid for getting principal access token");
+            throw new AuthenticationException("Invalid for getting principal access token");
         }
         var user = await userManager.FindByNameAsync(principal.Identity.Name);
         if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
@@ -32,6 +33,7 @@ public class RefreshTokenCommandHandler(
             throw new UnauthorizedAccessException("Invalid refresh token or this token expired.");
         }
         var token = await authManager.CreateAccessToken(user);
+        
         return token;
     }
     

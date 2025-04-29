@@ -9,9 +9,9 @@ namespace UserService.Application.UseCases.Commands.ResetUserCommands.SendResetE
 public class SendResetEmailCommandHandler(
     UserManager<User> userManager,
     KafkaEmailProducer kafkaEmailProducer)
-    : IRequestHandler<SendResetEmailCommand, string>
+    : IRequestHandler<SendResetEmailCommand, Unit>
 {
-    public async Task<string> Handle(SendResetEmailCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SendResetEmailCommand request, CancellationToken cancellationToken)
     {
         var user = await userManager.FindByEmailAsync(request.NewPasswordDto.Email);
         if (user == null)
@@ -30,6 +30,6 @@ public class SendResetEmailCommandHandler(
             Body =  body
         });
         
-        return "Reset token sent successfully.";
+        return Unit.Value;
     }
 }

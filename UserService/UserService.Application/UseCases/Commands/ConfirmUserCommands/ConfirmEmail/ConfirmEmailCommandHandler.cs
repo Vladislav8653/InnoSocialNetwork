@@ -8,9 +8,9 @@ namespace UserService.Application.UseCases.Commands.ConfirmUserCommands.ConfirmE
 
 public class ConfirmEmailCommandHandler
     (UserManager<User> userManager)
-    : IRequestHandler<ConfirmEmailCommand, string>
+    : IRequestHandler<ConfirmEmailCommand, Unit>
 {
-    public async Task<string> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(request.UserId, out var userIdGuid))
         {
@@ -30,6 +30,6 @@ public class ConfirmEmailCommandHandler
             throw new EmailNotConfirmedException("Confirmation code is invalid");
         }
         
-        return "Confirmed.";
+        return Unit.Value;
     }
 }

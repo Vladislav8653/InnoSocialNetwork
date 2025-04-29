@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using UserService.Application.DTO.PasswordResetDto;
-using UserService.Application.DTO;
 
 namespace UserService.Application.UseCases.Commands.ResetUserCommands.ResetPassword;
 
-public record ResetPasswordCommand : IRequest<string>
+public record ResetPasswordCommand : IRequest<Unit>
 {
     public ResetPasswordDto ResetPasswordDto { get; init; }
 }

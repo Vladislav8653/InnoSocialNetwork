@@ -23,9 +23,9 @@ public class UserConfirmationController(IMediator mediator): ControllerBase
             ConfirmationCode = confirmEmailDto.ConfirmationCode
         };
         
-        var result = await mediator.Send(query, cancellationToken);
+        await mediator.Send(query, cancellationToken);
         
-        return Ok(result);
+        return Ok("Confirmed.");
     }
     
     [Authorize]
@@ -39,6 +39,6 @@ public class UserConfirmationController(IMediator mediator): ControllerBase
         
         var result = await mediator.Send(query, cancellationToken);
         
-        return Ok(result);
+        return Ok("Your confirmation code was sent on email.");
     }
 }

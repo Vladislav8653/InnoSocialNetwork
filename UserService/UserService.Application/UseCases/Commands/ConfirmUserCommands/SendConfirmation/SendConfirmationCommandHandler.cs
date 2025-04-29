@@ -10,9 +10,9 @@ namespace UserService.Application.UseCases.Commands.ConfirmUserCommands.SendConf
 public class SendConfirmationCommandHandler(
     KafkaEmailProducer kafkaEmailProducer,
     UserManager<User> userManager) : 
-    IRequestHandler<SendConfirmationCommand, string>
+    IRequestHandler<SendConfirmationCommand, Unit>
 {
-    public async Task<string> Handle(SendConfirmationCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SendConfirmationCommand request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(request.UserId, out var userIdGuid))
         {
@@ -40,6 +40,6 @@ public class SendConfirmationCommandHandler(
             Body =  emailBody
         });
         
-        return "Your confirmation code was sent on email.";
+        return Unit.Value;
     }
 }

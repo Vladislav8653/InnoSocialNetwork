@@ -22,7 +22,7 @@ public class UserResetController(IMediator mediator) : ControllerBase
         
         var result = await mediator.Send(query, cancellationToken);
         
-        return Ok(result);
+        return Ok("Reset token sent successfully.");
     }
     
     [Route("reset-password")]
@@ -35,8 +35,8 @@ public class UserResetController(IMediator mediator) : ControllerBase
             ResetPasswordDto = resetPasswordDto
         };
        
-        var result = await mediator.Send(query, cancellationToken);
+        await mediator.Send(query, cancellationToken);
         
-        return Ok(result);
+        return Ok("Password reset successfully.");
     }
 }
