@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using UserService.Application.Contracts;
 using UserService.Application.Exceptions;
 using UserService.Application.Producers.EmailProducer;
 using UserService.Domain.Models;
@@ -8,7 +9,7 @@ using UserService.Domain.Models;
 namespace UserService.Application.UseCases.Commands.ConfirmUserCommands.SendConfirmation;
 
 public class SendConfirmationCommandHandler(
-    KafkaEmailProducer kafkaEmailProducer,
+    INotificationService kafkaEmailProducer,
     UserManager<User> userManager) : 
     IRequestHandler<SendConfirmationCommand, Unit>
 {

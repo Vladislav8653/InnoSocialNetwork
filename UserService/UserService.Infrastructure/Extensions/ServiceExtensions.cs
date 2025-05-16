@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using UserService.Application.Contracts;
 using UserService.Application.Producers.EmailProducer;
 using UserService.Application.Settings;
 using UserService.Domain.Models;
@@ -97,6 +98,10 @@ public static class ServiceExtensions
     public static void ConfigureKafka(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<KafkaSettings>(configuration.GetSection("KafkaSettings"));
-        services.AddSingleton<KafkaEmailProducer>();
+    }
+
+    public static void ConfigureNotificationService(this IServiceCollection services)
+    {
+        services.AddSingleton<INotificationService, KafkaEmailProducer>();
     }
 }

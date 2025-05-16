@@ -12,6 +12,7 @@ builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 builder.Services.ConfigureKafka(builder.Configuration);
+builder.Services.ConfigureNotificationService();
 builder.Services.AddHttpClient();
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.ConfigureIdentity();

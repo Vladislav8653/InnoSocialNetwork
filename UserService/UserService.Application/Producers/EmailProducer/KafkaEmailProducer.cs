@@ -1,11 +1,12 @@
 ﻿using System.Text.Json;
 using Confluent.Kafka;
 using Microsoft.Extensions.Options;
+using UserService.Application.Contracts;
 using UserService.Application.Settings;
 
 namespace UserService.Application.Producers.EmailProducer;
 
-public class KafkaEmailProducer
+public class KafkaEmailProducer : INotificationService
 {
     private readonly IProducer<Null, string> _producer;
     private readonly string _topic;

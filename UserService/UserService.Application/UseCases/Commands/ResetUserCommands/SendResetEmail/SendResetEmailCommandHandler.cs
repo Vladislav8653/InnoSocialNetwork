@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using UserService.Application.Contracts;
 using UserService.Application.Exceptions;
 using UserService.Application.Producers.EmailProducer;
 using UserService.Domain.Models;
@@ -8,7 +9,7 @@ namespace UserService.Application.UseCases.Commands.ResetUserCommands.SendResetE
 
 public class SendResetEmailCommandHandler(
     UserManager<User> userManager,
-    KafkaEmailProducer kafkaEmailProducer)
+    INotificationService kafkaEmailProducer)
     : IRequestHandler<SendResetEmailCommand, Unit>
 {
     public async Task<Unit> Handle(SendResetEmailCommand request, CancellationToken cancellationToken)
