@@ -25,17 +25,39 @@ public class UsersControllerTests
     public async Task GetAllUsers_ShouldReturnOkResult_WhenUsersAreFound()
     {
         // Arrange
-        var users = new List<AuthenticateUserDto>(); // Предположим, что UserDto - это DTO для пользователей
-        var userResponse = new List<User>();
-        _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllUsersQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userResponse);
-
+        var expectedUsers = new List<User>
+        {
+            new User
+            {
+                Id = new Guid().ToString(), 
+                Email = "test@test1.com",
+                UserName = "test",
+                Role = UserRequestDto.UserRole.User.ToString(),
+                PasswordHash = "test"
+            },
+            new User
+            {
+                Id = new Guid().ToString(), 
+                Email = "test@test2.com",
+                UserName = "test",
+                Role = UserRequestDto.UserRole.Administrator.ToString(),
+                PasswordHash = "test"
+            },
+        };
+        
+        _mediatorMock
+            .Setup(m => m.Send(It.IsAny<GetAllUsersQuery>(), default))
+            .ReturnsAsync(expectedUsers);   
+        
         // Act
         var result = await _controller.GetAllUsers();
-
-        // Assert
+        
+        //Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(users, okResult.Value);
+        var returnedUsers = Assert.IsAssignableFrom<IEnumerable<User>>(okResult.Value);
+        Assert.Equal(2, returnedUsers.Count());
+        
+        _mediatorMock.Verify(m => m.Send(It.IsAny<GetAllUsersQuery>(), default), Times.Once);
     }
 
     [Fact]
