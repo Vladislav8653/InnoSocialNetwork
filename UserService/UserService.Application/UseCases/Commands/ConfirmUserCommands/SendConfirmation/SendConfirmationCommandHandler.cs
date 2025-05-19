@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UserService.Application.Contracts;
+using UserService.Application.DTO;
 using UserService.Application.Exceptions;
-using UserService.Application.Producers.EmailProducer;
 using UserService.Domain.Models;
 
 namespace UserService.Application.UseCases.Commands.ConfirmUserCommands.SendConfirmation;
@@ -33,7 +33,7 @@ public class SendConfirmationCommandHandler(
         
         var emailBody = $"Your confirmation code: {await userManager.GenerateEmailConfirmationTokenAsync(user)}";
         
-        await kafkaEmailProducer.SendEmailAsync(new SendEmailEvent
+        await kafkaEmailProducer.SendEmailAsync(new EmailDto
         {
             ToName = user.UserName!, 
             ToEmail = user.Email!, 

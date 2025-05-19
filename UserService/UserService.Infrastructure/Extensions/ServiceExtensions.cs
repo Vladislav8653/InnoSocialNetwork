@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService.Application.Contracts;
-using UserService.Application.Producers.EmailProducer;
 using UserService.Application.Settings;
 using UserService.Domain.Models;
+using UserService.Infrastructure.Producers.EmailProducer;
 
 namespace UserService.Infrastructure.Extensions;
 

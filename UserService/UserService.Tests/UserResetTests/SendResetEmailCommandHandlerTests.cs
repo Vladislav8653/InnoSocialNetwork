@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Moq;
 using UserService.Application.Contracts;
+using UserService.Application.DTO;
 using UserService.Application.DTO.PasswordResetDto;
-using UserService.Application.Producers.EmailProducer;
 using UserService.Application.Settings;
 using UserService.Application.UseCases.Commands.ResetUserCommands.SendResetEmail;
 using UserService.Domain.Models;
+using UserService.Infrastructure.Producers.EmailProducer;
 
 namespace UserService.Tests.UserResetTests;
 
@@ -67,7 +68,7 @@ public class SendResetEmailCommandHandlerTests : IAsyncLifetime
         var consumeResult = _consumer.Consume(TimeSpan.FromSeconds(5));
         Assert.NotNull(consumeResult);
 
-        var message = JsonSerializer.Deserialize<SendEmailEvent>(consumeResult.Message.Value);
+        var message = JsonSerializer.Deserialize<EmailDto>(consumeResult.Message.Value);
         Assert.Equal("Reset Password", message.Subject);
         Assert.Equal(testUser.Email, message.ToEmail);
         Assert.Equal(testUser.UserName, message.ToName);

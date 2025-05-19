@@ -1,6 +1,6 @@
-﻿namespace UserService.Application.Producers.EmailProducer;
+﻿namespace UserService.Application.DTO;
 
-public class SendEmailEvent
+public class EmailDto
 {
     public string ToEmail { get; set; }
     public string ToName { get; set; }

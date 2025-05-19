@@ -2,9 +2,10 @@
 using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using UserService.Application.Contracts;
+using UserService.Application.DTO;
 using UserService.Application.Settings;
 
-namespace UserService.Application.Producers.EmailProducer;
+namespace UserService.Infrastructure.Producers.EmailProducer;
 
 public class KafkaEmailProducer : INotificationService
 {
@@ -24,7 +25,7 @@ public class KafkaEmailProducer : INotificationService
         _producer = new ProducerBuilder<Null, string>(config).Build();
     }
 
-    public async Task SendEmailAsync(SendEmailEvent emailEvent)
+    public async Task SendEmailAsync(EmailDto emailEvent)
     {
         var message = new Message<Null, string>
         {
