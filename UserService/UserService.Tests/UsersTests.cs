@@ -15,9 +15,11 @@ public class UsersTests
 {
     private readonly Mock<IMediator> _mediatorMock;
     private readonly UsersController _controller;
+    private readonly IFixture _fixture;
 
     public UsersTests()
-    {
+    { 
+        _fixture = new Fixture();
         _mediatorMock = new Mock<IMediator>();
         _controller = new UsersController(_mediatorMock.Object);
     }
@@ -27,8 +29,7 @@ public class UsersTests
     {
         // Arrange
         const int count = 3;
-        var fixture = new Fixture();
-        var expectedUsers = fixture.CreateMany<User>(count).ToList();
+        var expectedUsers = _fixture.CreateMany<User>(count).ToList();
         
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetAllUsersQuery>(), default))
@@ -49,8 +50,7 @@ public class UsersTests
     public async Task RegisterUser_ShouldReturnOkResult_WhenUserIsRegistered()
     {
         // Arrange
-        var fixture = new Fixture();
-        var userRequestDto = fixture.Create<UserRequestDto>();
+        var userRequestDto = _fixture.Create<UserRequestDto>();
         var command = new RegisterUserCommand { UserRequestDto = userRequestDto };
         
         // Act
