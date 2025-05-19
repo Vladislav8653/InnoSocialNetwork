@@ -20,7 +20,7 @@ public class UserResetController(IMediator mediator) : ControllerBase
             NewPasswordDto = emailForPasswordResetDto
         };
         
-        var result = await mediator.Send(query, cancellationToken);
+        await mediator.Send(query, cancellationToken);
         
         return Ok("Reset token sent successfully.");
     }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoFixture;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using UserService.Application.DTO;
@@ -10,12 +11,12 @@ using UserService.Presentation.Controllers;
 
 namespace UserService.Tests;
 
-public class UsersControllerTests
+public class UsersTests
 {
     private readonly Mock<IMediator> _mediatorMock;
     private readonly UsersController _controller;
 
-    public UsersControllerTests()
+    public UsersTests()
     {
         _mediatorMock = new Mock<IMediator>();
         _controller = new UsersController(_mediatorMock.Object);
@@ -25,25 +26,9 @@ public class UsersControllerTests
     public async Task GetAllUsers_ShouldReturnOkResult_WhenUsersAreFound()
     {
         // Arrange
-        var expectedUsers = new List<User>
-        {
-            new User
-            {
-                Id = new Guid().ToString(), 
-                Email = "test@test1.com",
-                UserName = "test",
-                Role = UserRequestDto.UserRole.User.ToString(),
-                PasswordHash = "test"
-            },
-            new User
-            {
-                Id = new Guid().ToString(), 
-                Email = "test@test2.com",
-                UserName = "test",
-                Role = UserRequestDto.UserRole.Administrator.ToString(),
-                PasswordHash = "test"
-            },
-        };
+        const int count = 3;
+        var fixture = new Fixture();
+        var expectedUsers = fixture.CreateMany<User>(count).ToList();
         
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetAllUsersQuery>(), default))
@@ -55,7 +40,7 @@ public class UsersControllerTests
         //Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var returnedUsers = Assert.IsAssignableFrom<IEnumerable<User>>(okResult.Value);
-        Assert.Equal(2, returnedUsers.Count());
+        Assert.Equal(count, returnedUsers.Count());
         
         _mediatorMock.Verify(m => m.Send(It.IsAny<GetAllUsersQuery>(), default), Times.Once);
     }
@@ -64,7 +49,8 @@ public class UsersControllerTests
     public async Task RegisterUser_ShouldReturnOkResult_WhenUserIsRegistered()
     {
         // Arrange
-        var userRequestDto = new UserRequestDto(); // Заполните нужными данными
+        var fixture = new Fixture();
+        var userRequestDto = fixture.Create<UserRequestDto>();
         var command = new RegisterUserCommand { UserRequestDto = userRequestDto };
         
         // Act
@@ -79,7 +65,7 @@ public class UsersControllerTests
     public async Task DeleteUser_ShouldReturnOkResult_WhenUserIsDeleted()
     {
         // Arrange
-        var userId = "someUserId";
+        const string userId = "someUserId";
         var command = new DeleteUserCommand { UserId = userId };
 
         // Act
