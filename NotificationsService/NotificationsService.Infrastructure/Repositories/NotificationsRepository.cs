@@ -9,9 +9,10 @@ public class NotificationRepository : INotificationRepository
 {
     private readonly IMongoCollection<NotificationEvent> _collection;
 
-    public NotificationRepository(IMongoDatabase database)
+    public NotificationRepository(IMongoClient client)
     {
-        _collection = database.GetCollection<NotificationEvent>("notifications");
+        var database = client.GetDatabase("Notifications");
+        _collection = database.GetCollection<NotificationEvent>("NotificationsDoc");
     }
 
     public async Task<NotificationEvent> GetByIdAsync(Guid id, CancellationToken cancellationToken)

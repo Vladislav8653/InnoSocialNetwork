@@ -27,14 +27,14 @@ public class SendResetEmailCommandHandlerTests : IAsyncLifetime
         var kafkaSettings = new KafkaSettings
         {
             BootstrapServers = "localhost:9092",
-            Topic = "test"
+            Topic = "notification.email"
         };
         
         _kafkaNotificationService = new KafkaEmailProducer(Options.Create(kafkaSettings));
 
         var consumerConfig = new ConsumerConfig
         {
-            GroupId = "test",
+            GroupId = "1",
             BootstrapServers = kafkaSettings.BootstrapServers,
             AutoOffsetReset = AutoOffsetReset.Earliest,
         };

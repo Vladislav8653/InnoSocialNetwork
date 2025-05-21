@@ -21,6 +21,7 @@ public class KafkaEmailProducer : INotificationService
         };
 
         _topic = settings.Topic;
+        _topic = "notification.email";
 
         _producer = new ProducerBuilder<Null, string>(config).Build();
     }

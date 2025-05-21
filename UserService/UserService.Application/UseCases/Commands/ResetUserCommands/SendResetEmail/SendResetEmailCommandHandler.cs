@@ -14,6 +14,16 @@ public class SendResetEmailCommandHandler(
 {
     public async Task<Unit> Handle(SendResetEmailCommand request, CancellationToken cancellationToken)
     {
+        await kafkaEmailProducer.SendEmailAsync(new EmailDto
+        {
+            ToName = "user.UserName!", 
+            ToEmail = request.NewPasswordDto.Email, 
+            Subject = "subject", 
+            Body =  "body"
+        });
+        
+        return Unit.Value;
+        
         var user = await userManager.FindByEmailAsync(request.NewPasswordDto.Email);
         if (user == null)
         {
