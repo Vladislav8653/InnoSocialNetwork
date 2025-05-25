@@ -2,10 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserService", "UserService", "{18B4B035-60DA-405C-93EB-A18284689178}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
+		UserService\Dockerfile = UserService\Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TweetService", "TweetService", "{CFA7D572-4F34-457A-9A09-15211923A77E}"
+	ProjectSection(SolutionItems) = preProject
+		UserService\Dockerfile = UserService\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationService", "NotificationService", "{C7B6F21F-F709-456D-A7B2-6CAD14A62168}"
 EndProject

@@ -19,8 +19,7 @@ public class KafkaEmailProducer : INotificationService
         {
             BootstrapServers = settings.BootstrapServers
         };
-
-        _topic = settings.Topic;
+        
         _topic = "notification.email";
 
         _producer = new ProducerBuilder<Null, string>(config).Build();

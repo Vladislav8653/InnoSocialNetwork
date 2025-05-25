@@ -98,6 +98,8 @@ public static class ServiceExtensions
     public static void ConfigureKafka(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<KafkaSettings>(configuration.GetSection("KafkaSettings"));
+        // доабавить код, который делает топики
+        
     }
 
     public static void ConfigureNotificationService(this IServiceCollection services)
