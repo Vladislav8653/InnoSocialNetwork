@@ -1,15 +1,52 @@
-﻿# docker-compose.kafka.yml
+﻿version: "3.9"
+
 services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper
+  zookeeper-users:
+    container_name: zookeeper-users
+    image: confluentinc/cp-zookeeper:7.5.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
-  kafka:
-    image: confluentinc/cp-kafka
+  kafka-users:
+    container_name: kafka-users
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper-users
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_MAP}
+      KAFKA_LISTENERS: ${KAFKA_LISTENERS}
+      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME}
+    volumes:
+      - kafka-users_data:/var/lib/kafka/data
+
+  postgres-users:
+    container_name: postgres-users
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERS_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_USERS_PASSWORD}
+    volumes:
+      - postgres-users_data:/var/lib/postgresql/data
+
+  postgres-tweets:
+    container_name: postgres-tweets
+    image: postgres:17
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_TWEETS_DB}
+      POSTGRES_USER: ${POSTGRES_TWEETS_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_TWEETS_PASSWORD}
+    volumes:
+      - postgres-tweets_data:/var/lib/postgresql/data
+
+volumes:
+  kafka-users_data:
+  postgres-users_data:
+  postgres-tweets_data:
