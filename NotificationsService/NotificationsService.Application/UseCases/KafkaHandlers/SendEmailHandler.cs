@@ -1,6 +1,6 @@
 ﻿using NotificationsService.Application.Contracts;
 using NotificationsService.Application.Contracts.ServicesContracts;
-using NotificationsService.Application.EmailService;
+using NotificationsService.Application.DTOs;
 
 namespace NotificationsService.Application.UseCases.KafkaHandlers;
 

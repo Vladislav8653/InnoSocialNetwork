@@ -3,6 +3,7 @@ using Confluent.Kafka;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NotificationsService.Application.Contracts;
+using NotificationsService.Application.DTOs;
 using NotificationsService.Application.EmailService;
 
 namespace NotificationsService.Infrastructure.BackgroundServices;
@@ -16,7 +17,8 @@ public class KafkaListenerBackgroundService(
     {
         consumer.Subscribe([
             "notification.email",
-            "notification.in-app"
+            "notification.in-app",
+            "tweet.created"
         ]);
 
         while (!stoppingToken.IsCancellationRequested)
@@ -39,6 +41,16 @@ public class KafkaListenerBackgroundService(
                 }
                 case "notification.in-app":
                 {
+                    break;
+                }
+                case "tweet.created":
+                {
+                    var message = JsonSerializer.Deserialize<TweetDigestEvent>(consumeResult.Message.Value);
+                    if (message is null)
+                        throw new JsonException("Tweet message could not be deserialized");
+
+                    var handler = scopedProvider.GetRequiredService<IEventHandler<TweetDigestEvent>>();
+                    await handler.HandleAsync(message, stoppingToken);
                     break;
                 }
             }

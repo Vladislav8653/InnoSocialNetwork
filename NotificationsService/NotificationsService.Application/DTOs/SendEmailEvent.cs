@@ -1,4 +1,4 @@
-﻿namespace NotificationsService.Application.EmailService;
+﻿namespace NotificationsService.Application.DTOs;
 
 public class SendEmailEvent
 {
