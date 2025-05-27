@@ -3,6 +3,7 @@ using FluentValidation;
 using Hangfire;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -42,11 +43,26 @@ public static class ServiceExtensions
             return new ConsumerBuilder<string, string>(config).Build();
         });
     }
-
+    
+  public static void ConfigureGrpc(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddGrpcClient<TweetService.TweetServiceClient>(o =>
+        {
+            o.Address = new Uri("http://tweet-service:5001"); 
+        });
+        services.AddScoped<TweetDigestGrpcClient>();
+    }
+  
     public static void ConfigureHangfire(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
+        var mongoSettings = services.BuildServiceProvider().GetService<IOptions<MongoDbSettings>>()?.Value;
+        if (mongoSettings is null)
+            throw new ApplicationException("mongoSettings not found");
+        
         services.AddHangfire(config => config.UseMongoStorage(
-            configuration.GetConnectionString("MongoHangfire"), 
+            //configuration.GetConnectionString(), 
+            mongoSettings.ConnectionString,
             new MongoStorageOptions
             {
                 MigrationOptions = new MongoMigrationOptions
@@ -55,24 +71,18 @@ public static class ServiceExtensions
                 CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection
             }
         ));
+        services.AddHangfireServer();
         services.AddScoped<TweetDigestJob>();
     }
     
-    public static void ConfigureGrpc(this IServiceCollection services, IConfiguration configuration)
+    public static void AddHangfireJobs(this IApplicationBuilder app)
     {
-        services.AddGrpcClient<TweetService.TweetServiceClient>(o =>
-        {
-            o.Address = new Uri("http://tweet-service:5001"); 
-        });
-        services.AddScoped<TweetDigestGrpcClient>();
-    }
-
-    public static void AddHangfireJobs(this IServiceCollection services)
-    {
-        RecurringJob.AddOrUpdate<TweetDigestJob>(
+        var recurringJobs = app.ApplicationServices.GetRequiredService<IRecurringJobManager>();
+        
+        recurringJobs.AddOrUpdate<TweetDigestJob>(
             "daily-digest",
             job => job.ExecuteAsync(CancellationToken.None),
-            Cron.Daily(10, 0)
+            Cron.Daily(10, 0) // каждый день в 10:00
         );
     }
     

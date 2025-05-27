@@ -1,6 +1,7 @@
 ﻿version: "3.9"
 
 services:
+  # user service START
   zookeeper-users:
     container_name: zookeeper-users
     image: confluentinc/cp-zookeeper:7.5.0
@@ -34,7 +35,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_USERS_PASSWORD}
     volumes:
       - postgres-users_data:/var/lib/postgresql/data
-
+  # user service END
+  
+  # tweets service START
   postgres-tweets:
     container_name: postgres-tweets
     image: postgres:17
@@ -46,8 +49,26 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_TWEETS_PASSWORD}
     volumes:
       - postgres-tweets_data:/var/lib/postgresql/data
+  # tweets service FINISH
+  
+  # notification service START
+  mongo-notifications:
+    image: mongo:6.0
+    container_name: mongo-notifications
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_NOTIFICATIONS_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_NOTIFICATIONS_PASSWORD}
+    volumes:
+      - mongo-notifications_data:/data/db
+  # notification service FINISH
+  
+  
 
 volumes:
   kafka-users_data:
   postgres-users_data:
   postgres-tweets_data:
+  mongo-notifications_data:

@@ -1,5 +1,7 @@
-﻿using NotificationsService.Application.Contracts.ServicesContracts;
+﻿using Newtonsoft.Json;
+using NotificationsService.Application.Contracts.ServicesContracts;
 using NotificationsService.Application.GRPC;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace NotificationsService.Application.UseCases.HangfireHandlers;
 
@@ -16,7 +18,13 @@ public class TweetDigestJob(TweetDigestGrpcClient tweetClient, ISmtpService emai
         {
             return;
         }
+        
+        var digestJson = JsonSerializer.Serialize(tweets);
 
-        //await emailService.SendEmailAsync(tweets);
+        await emailService.SendEmailAsync(
+            "Users",
+            "sashamelnikov952@gmail.com",
+            "Tweet digest",
+            digestJson);
     }
 }
