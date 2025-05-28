@@ -2,11 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Text.Json;
-using Tweet.Grpc;
 using Grpc.Core;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using NotificationsService.Application.Contracts.ServicesContracts;
 using NotificationsService.Application.UseCases.HangfireHandlers;
+using TweetDigest.Grpc;
 
 namespace NotificationService.Tests;
 

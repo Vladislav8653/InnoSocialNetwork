@@ -11,18 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include=".\Contracts\tweet.proto" GrpcServices="Client" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-      <PackageReference Include="Google.Protobuf" Version="3.31.0" />
-      <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
-      <PackageReference Include="Grpc.Tools" Version="2.72.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
       <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
       <PackageReference Include="Hangfire.Core" Version="1.8.18" />
       <PackageReference Include="MailKit" Version="4.10.0" />

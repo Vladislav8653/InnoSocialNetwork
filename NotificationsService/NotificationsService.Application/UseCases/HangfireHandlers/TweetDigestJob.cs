@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using NotificationsService.Application.Contracts.Grpc;
 using NotificationsService.Application.Contracts.ServicesContracts;
-using NotificationsService.Application.GRPC;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace NotificationsService.Application.UseCases.HangfireHandlers;
 
-public class TweetDigestJob(TweetDigestGrpcClient tweetClient, ISmtpService emailService)
+public class TweetDigestJob(ITweetDigestGrpcClient tweetClient, ISmtpService emailService)
 {
     public async Task ExecuteAsync(CancellationToken stoppingToken)
     {

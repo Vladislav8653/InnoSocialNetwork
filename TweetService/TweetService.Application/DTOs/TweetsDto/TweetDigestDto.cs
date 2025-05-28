@@ -2,6 +2,7 @@
 
 public record TweetDigestDto
 {
+    public Guid Id { get; init; }
     public string Title { get; init; } 
     public string Content { get; init; } 
     public DateTime Created { get; init; }

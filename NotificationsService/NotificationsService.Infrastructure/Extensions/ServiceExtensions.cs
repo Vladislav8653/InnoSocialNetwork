@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka;
-using FluentValidation;
 using Hangfire;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
@@ -7,14 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NotificationsService.Application.Contracts.Grpc;
 using NotificationsService.Application.Contracts.ServicesContracts;
 using NotificationsService.Application.EmailService;
-using NotificationsService.Application.GRPC;
 using NotificationsService.Application.Settings;
 using NotificationsService.Application.UseCases.HangfireHandlers;
-using NotificationsService.Application.Validation;
+using NotificationsService.Infrastructure.Grpc;
 using NotificationsService.Infrastructure.Settings;
-using Tweet.Grpc;
+using TweetDigest.Grpc;
 
 namespace NotificationsService.Infrastructure.Extensions;
 
@@ -45,12 +44,12 @@ public static class ServiceExtensions
     }
     
   public static void ConfigureGrpc(this IServiceCollection services, IConfiguration configuration)
-    {
+    { 
+        services.AddScoped<ITweetDigestGrpcClient, TweetDigestGrpcClient>();
         services.AddGrpcClient<TweetService.TweetServiceClient>(o =>
         {
             o.Address = new Uri("http://tweet-service:5001"); 
         });
-        services.AddScoped<TweetDigestGrpcClient>();
     }
   
     public static void ConfigureHangfire(this IServiceCollection services, IConfiguration configuration)
