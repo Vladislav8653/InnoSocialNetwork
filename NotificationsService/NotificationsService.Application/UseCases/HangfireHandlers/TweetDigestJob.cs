@@ -20,10 +20,11 @@ public class TweetDigestJob(ITweetDigestGrpcClient tweetClient, ISmtpService ema
         
         var digestJson = JsonSerializer.Serialize(tweets);
 
-        await emailService.SendEmailAsync(
+        await File.AppendAllTextAsync("D:/digest.json", digestJson, stoppingToken);
+        /*await emailService.SendEmailAsync(
             "Users",
             "sashamelnikov952@gmail.com",
             "Tweet digest",
-            digestJson);
+            digestJson);*/
     }
 }

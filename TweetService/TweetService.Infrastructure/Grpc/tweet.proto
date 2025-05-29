@@ -15,10 +15,9 @@ message DigestRequest {
 
 message DigestItem {
   string tweetId = 1;
-  string author = 2;
-  string content = 3;
-  string createdAt = 4;
-  string modifiedAt = 5;
+  string content = 2;
+  string createdAt = 3;
+  string modifiedAt = 4;
 }
 
 message DigestResponse {

@@ -19,7 +19,6 @@ public class TweetDigestGrpcClient(TweetService.TweetServiceClient client) : ITw
         return response.Items.Select(item => new TweetDigestItemDto
         {
             TweetId = item.TweetId,
-            Author = item.Author,
             Content = item.Content,
             CreatedAt = DateTime.TryParse(item.CreatedAt, out var createdAt) ? createdAt : default,
             ModifiedAt = DateTime.TryParse(item.ModifiedAt, out var modifiedAt) ? modifiedAt : default,

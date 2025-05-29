@@ -44,7 +44,7 @@ public class TweetsController(ISender sender) : ControllerBase
         return Ok(tweet);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateTweet([FromBody] TweetRequestDto request,
         CancellationToken cancellationToken)
@@ -60,7 +60,7 @@ public class TweetsController(ISender sender) : ControllerBase
         return NoContent();
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpPut("{tweetId:guid}")]
     public async Task<IActionResult> UpdateTweet(
         [FromBody] TweetRequestDto request,
@@ -79,7 +79,7 @@ public class TweetsController(ISender sender) : ControllerBase
         return NoContent();
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpDelete("{tweetId:guid}")]
     public async Task<IActionResult> DeleteTweet(Guid tweetId,
         CancellationToken cancellationToken)

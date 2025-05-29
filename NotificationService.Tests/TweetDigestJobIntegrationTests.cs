@@ -50,8 +50,8 @@ public class TweetDigestJobIntegrationTests : IAsyncDisposable
 
         var fakeTweets = new List<DigestItem>
         {
-            new DigestItem { TweetId = "1", Author = "Author1", Content = "Content1", CreatedAt = DateTime.UtcNow.ToString("o") },
-            new DigestItem { TweetId = "2", Author = "Author2", Content = "Content2", CreatedAt = DateTime.UtcNow.ToString("o") }
+            new DigestItem { TweetId = "1", Content = "Content1", CreatedAt = DateTime.UtcNow.ToString("o") },
+            new DigestItem { TweetId = "2", Content = "Content2", CreatedAt = DateTime.UtcNow.ToString("o") }
         };
         var digestResponse = new DigestResponse();
         digestResponse.Items.AddRange(fakeTweets);

@@ -1,8 +1,6 @@
-using Hangfire;
 using MediatR;
 using NotificationsService.Application.Contracts;
 using NotificationsService.Application.DTOs;
-using NotificationsService.Application.UseCases.HangfireHandlers;
 using NotificationsService.Application.UseCases.KafkaHandlers;
 using NotificationsService.Infrastructure.BackgroundServices;
 using NotificationsService.Infrastructure.Extensions;
