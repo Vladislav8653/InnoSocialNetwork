@@ -16,11 +16,11 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
-      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_MAP}
-      KAFKA_LISTENERS: ${KAFKA_LISTENERS}
-      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME}
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT_USERS}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS_USERS}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_MAP_USERS}
+      KAFKA_LISTENERS: ${KAFKA_LISTENERS_USERS}
+      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME_USERS}
     volumes:
       - kafka-users_data:/var/lib/kafka/data
 
@@ -63,7 +63,52 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_NOTIFICATIONS_PASSWORD}
     volumes:
       - mongo-notifications_data:/data/db
+      - 
+  zookeeper-notifications:
+    container_name: zookeeper-notifications
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2182
+
+  kafka-notifications:
+    container_name: kafka-notifications
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper-notifications
+    ports:
+      - "9093:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT_NOTIFICATIONS}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS_NOTIFICATIONS}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_MAP_NOTIFICATIONS}
+      KAFKA_LISTENERS: ${KAFKA_LISTENERS_NOTIFICATIONS}
+      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME_NOTIFICATIONS}
+    volumes:
+      - kafka-notifications_data:/var/lib/kafka/data
   # notification service FINISH
+  
+  # discussion service START
+  mongo-discussion:
+    image: mongo:6.0
+    container_name: mongo-discussion
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DISCUSSION_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DISCUSSION_PASSWORD}
+    volumes:
+      - mongo-discussion_data:/data/db
+        
+  redis:
+    image: redis:8.0
+    container_name: redis-discussion
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-discussion_data:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+  # discussion service FINISH
   
   
 
@@ -72,3 +117,6 @@ volumes:
   postgres-users_data:
   postgres-tweets_data:
   mongo-notifications_data:
+  mongo-discussion_data:
+  redis-discussion_data:
+  kafka-notifications_data:

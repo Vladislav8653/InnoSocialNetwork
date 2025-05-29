@@ -3,7 +3,7 @@ using MediatR;
 using TweetDigest.Grpc;
 using TweetService.Application.UseCases.Queries.Tweet.GetTweetsDigest;
 
-namespace TweetService.Presentation.GrpcHandlers;
+namespace TweetService.Presentation.GrpcService;
 
 public class TweetDigestService(ISender sender) : TweetDigest.Grpc.TweetService.TweetServiceBase
 {

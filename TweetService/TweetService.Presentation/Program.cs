@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TweetService.Application;
 using TweetService.Infrastructure;
 using TweetService.Infrastructure.Extensions;
-using TweetService.Presentation.GrpcHandlers;
+using TweetService.Presentation.GrpcService;
 
 var builder = WebApplication.CreateBuilder(args);   
 builder.Services.ConfigureRepository();

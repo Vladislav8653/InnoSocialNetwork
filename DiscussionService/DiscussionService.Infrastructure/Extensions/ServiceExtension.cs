@@ -28,9 +28,7 @@ public static class ServiceExtension
             options.Configuration = configuration.GetSection("RedisServerAddress").Value;
         });
     }
-
-
-
+    
     public static void AddValidators(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<MessageValidator>();
