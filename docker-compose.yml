@@ -2,6 +2,20 @@
 
 services:
   # user service START
+  userservice:
+    build:
+      context: ./UserService
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres-users
+      - kafka-users
+    ports:
+      - "2000:2000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - PostgresConnectionString=${USER_DB_CONNECTION}
+      - Kafka__BootstrapServers=${KAFKA_USERS_BROKER}
+  
   zookeeper-users:
     container_name: zookeeper-users
     image: confluentinc/cp-zookeeper:7.5.0
@@ -38,6 +52,18 @@ services:
   # user service END
   
   # tweets service START
+  tweetservice:
+    build:
+      context: ./TweetService
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres-tweets
+    ports:
+      - "2001:2000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - PostgresConnectionString=${TWEET_DB_CONNECTION}
+    
   postgres-tweets:
     container_name: postgres-tweets
     image: postgres:17
@@ -52,6 +78,20 @@ services:
   # tweets service FINISH
   
   # notification service START
+  notificationsservice:
+    build:
+      context: ./NotificationsService
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka-notifications
+      - mongo-notifications
+    ports:
+      - "2002:2000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MongoDbSettings__ConnectionString=${NOTIFICATIONS_DB_CONNECTION}
+      - KafkaSettings__BootstrapServers=${KAFKA_NOTIFICATIONS_BROKER}
+  
   mongo-notifications:
     image: mongo:6.0
     container_name: mongo-notifications
@@ -63,7 +103,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_NOTIFICATIONS_PASSWORD}
     volumes:
       - mongo-notifications_data:/data/db
-      - 
+  
   zookeeper-notifications:
     container_name: zookeeper-notifications
     image: confluentinc/cp-zookeeper:7.5.0
@@ -88,6 +128,20 @@ services:
   # notification service FINISH
   
   # discussion service START
+  discussionservice:
+    build:
+      context: ./DiscussionService
+      dockerfile: Dockerfile
+    depends_on:
+      - mongo-discussion
+      - redis
+    ports:
+      - "2003:2000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MongoDbSettings__ConnectionString=${DISCUSSION_DB_CONNECTION}
+      - RedisServerAddress=redis:6379
+  
   mongo-discussion:
     image: mongo:6.0
     container_name: mongo-discussion
