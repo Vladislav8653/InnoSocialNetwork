@@ -11,13 +11,13 @@ WORKDIR /src
 COPY . .
 
 # Восстанавливаем зависимости
-RUN dotnet restore UserService.Presentation/UserService.Presentation.csproj
+RUN dotnet restore DiscussionService.Presentation/DiscussionService.Presentation.csproj
 
 # Публикация (включает сборку)
-RUN dotnet publish UserService.Presentation/UserService.Presentation.csproj -c Release -o /app/publish
+RUN dotnet publish DiscussionService.Presentation/DiscussionService.Presentation.csproj -c Release -o /app/publish
 
 # Финальный образ
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "UserService.Presentation.dll"]
+ENTRYPOINT ["dotnet", "DiscussionService.Presentation.dll"]

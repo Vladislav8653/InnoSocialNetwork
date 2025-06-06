@@ -7,33 +7,17 @@ EXPOSE 2000
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Копируем sln и все csproj'и (с сохранением структуры)
-COPY TweetService.Domain/*.csproj TweetService.Domain/
-COPY TweetService.Application/*.csproj TweetService.Application/
-COPY TweetService.Infrastructure/*.csproj TweetService.Infrastructure/
-COPY TweetService.Presentation/*.csproj TweetService.Presentation/
-#COPY TweetService.Tests/*.csproj TweetService.Tests/
+# Копируем sln и все исходники целиком
+COPY . .
 
 # Восстанавливаем зависимости
 RUN dotnet restore TweetService.Presentation/TweetService.Presentation.csproj
 
-# Копируем остальные файлы
-COPY TweetService.Presentation/ TweetService.Presentation/
-COPY TweetService.Infrastructure/ TweetService.Infrastructure/
-COPY TweetService.Application/ TweetService.Application/
-COPY TweetService.Domain/ TweetService.Domain/
-#COPY TweetService.Tests/ TweetService.Tests/
-
-# Сборка проекта
-WORKDIR "TweetService.Presentation"
-RUN dotnet build "TweetService.Presentation.csproj" -c Release -o /app/build
-
-# Публикация
-FROM build AS publish
-RUN dotnet publish "TweetService.Presentation.csproj" -c Release -o /app/publish
+# Публикация (включает сборку)
+RUN dotnet publish TweetService.Presentation/TweetService.Presentation.csproj -c Release -o /app/publish
 
 # Финальный образ
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "TweetService.Presentation.dll"]

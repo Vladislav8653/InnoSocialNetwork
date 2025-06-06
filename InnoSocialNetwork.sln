@@ -11,8 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TweetService", "TweetServic
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationService", "NotificationService", "{C7B6F21F-F709-456D-A7B2-6CAD14A62168}"
+	ProjectSection(SolutionItems) = preProject
+		NotificationsService\Dockerfile = NotificationsService\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DiscussionService", "DiscussionService", "{914423C5-F485-4B80-9633-0DA2C55FDCAD}"
+	ProjectSection(SolutionItems) = preProject
+		DiscussionService\Dockerfile = DiscussionService\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetService.Domain", "TweetService\TweetService.Domain\TweetService.Domain.csproj", "{DDCBEBB6-1123-4FD8-AED2-E0030B94FE63}"
 EndProject
