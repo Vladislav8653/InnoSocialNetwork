@@ -106,4 +106,18 @@ public static class ServiceExtensions
     {
         services.AddSingleton<INotificationService, KafkaEmailProducer>();
     }
+    
+    public static void ConfigureCors(this IServiceCollection services, string policyName)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: policyName,
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+        });
+    }
 }

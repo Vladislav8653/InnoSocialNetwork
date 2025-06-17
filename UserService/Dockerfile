@@ -3,6 +3,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 EXPOSE 2000
 
+
 # Образ для сборки
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
@@ -20,4 +21,6 @@ RUN dotnet publish UserService.Presentation/UserService.Presentation.csproj -c R
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+ENV ASPNETCORE_URLS=http://+:2000
 ENTRYPOINT ["dotnet", "UserService.Presentation.dll"]
+

@@ -8,7 +8,7 @@ import { User, UserRegistrationDto } from '../models/user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5001/api/auth';
+  private apiUrl = 'http://localhost:5246/api/users';
   private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 

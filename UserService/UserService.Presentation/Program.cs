@@ -7,6 +7,8 @@ using UserService.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string policyName = "origins";
+builder.Services.ConfigureCors(policyName);
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -29,6 +31,8 @@ app.UseSwaggerUI(s =>
     s.SwaggerEndpoint("/swagger/v1/swagger.json", "Inno shop");
     s.RoutePrefix = string.Empty;
 });
+
+app.UseCors(policyName);
 
 app.UseRouting();
 
