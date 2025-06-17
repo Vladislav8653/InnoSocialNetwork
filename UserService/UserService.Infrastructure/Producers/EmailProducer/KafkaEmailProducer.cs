@@ -1,0 +1,37 @@
+﻿using System.Text.Json;
+using Confluent.Kafka;
+using Microsoft.Extensions.Options;
+using UserService.Application.Contracts;
+using UserService.Application.DTO;
+using UserService.Application.Settings;
+
+namespace UserService.Infrastructure.Producers.EmailProducer;
+
+public class KafkaEmailProducer : INotificationService
+{
+    private readonly IProducer<Null, string> _producer;
+    private readonly string _topic;
+
+    public KafkaEmailProducer(IOptions<KafkaSettings> options)
+    {
+        var settings = options.Value;
+        var config = new ProducerConfig
+        {
+            BootstrapServers = settings.BootstrapServers
+        };
+        
+        _topic = "notification.email";
+
+        _producer = new ProducerBuilder<Null, string>(config).Build();
+    }
+
+    public async Task SendEmailAsync(EmailDto emailEvent)
+    {
+        var message = new Message<Null, string>
+        {
+            Value = JsonSerializer.Serialize(emailEvent)
+        };
+
+        await _producer.ProduceAsync(_topic, message);
+    }
+}

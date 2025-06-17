@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+
+package tweetDigest;
+
+option csharp_namespace = "TweetDigest.Grpc";
+
+service TweetService {
+  rpc GetDailyDigest (DigestRequest) returns (DigestResponse);
+}
+
+message DigestRequest {
+  string from = 1;
+  string to = 2;
+}
+
+message DigestItem {
+  string tweetId = 1;
+  string content = 2;
+  string createdAt = 3;
+  string modifiedAt = 4;
+}
+
+message DigestResponse {
+  repeated DigestItem items = 1;
+}
