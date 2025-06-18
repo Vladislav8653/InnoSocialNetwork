@@ -2,7 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { UserRegistrationDto } from '../../models/user.model';
+import { RegisterDto, UserRole } from '../../models/auth.model';
+import { HttpErrorResponse } from '@angular/common/http';
+
+interface ErrorResponse {
+  Type: string;
+  Message: string;
+}
 
 @Component({
   selector: 'app-register',
@@ -20,26 +26,11 @@ export class RegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      userName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      dateOfBirth: ['', [Validators.required]]
-    }, {
-      validators: this.passwordMatchValidator
+      role: [UserRole.User] // Default to user role
     });
-  }
-
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-    
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-    }
   }
 
   onSubmit(): void {
@@ -47,22 +38,20 @@ export class RegisterComponent {
       this.isLoading = true;
       this.errorMessage = '';
 
-      const registrationData: UserRegistrationDto = {
-        username: this.registerForm.value.username,
+      const registrationData: RegisterDto = {
+        userName: this.registerForm.value.userName,
         email: this.registerForm.value.email,
         password: this.registerForm.value.password,
-        firstName: this.registerForm.value.firstName,
-        lastName: this.registerForm.value.lastName,
-        phoneNumber: this.registerForm.value.phoneNumber,
-        dateOfBirth: new Date(this.registerForm.value.dateOfBirth)
+        role: Number(this.registerForm.value.role)
       };
 
       this.authService.register(registrationData).subscribe({
         next: () => {
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/login']);
         },
-        error: (error) => {
-          this.errorMessage = error.error.message || 'An error occurred during registration';
+        error: (error: HttpErrorResponse) => {
+          console.log('Full error:', error);
+          this.errorMessage = `Error during registration: ${error.error}`;
           this.isLoading = false;
         },
         complete: () => {

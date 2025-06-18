@@ -12,21 +12,3 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface UserRegistrationDto {
-  username: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  dateOfBirth: Date;
-}
-
-export interface UserUpdateDto {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  dateOfBirth: Date;
-  bio: string;
-} 

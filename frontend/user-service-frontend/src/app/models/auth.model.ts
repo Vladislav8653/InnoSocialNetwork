@@ -3,25 +3,33 @@ export interface Auth {
 }
 
 export interface LoginDto {
-    username: string;
-    password: string;
+  userName: string;
+  password: string;
+}
+
+export enum UserRole {
+  User = 1,
+  Administrator = 2
+}
+
+export interface RegisterDto {
+  userName: string;
+  email: string;
+  password: string; 
+  role: UserRole;
 }
 
 export interface AuthResponse {
-    token: string;
-    user: {
-        id: string;
-        username: string;
-        email: string;
-    };
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface PasswordResetRequestDto {
-    email: string;
+  email: string;
 }
 
-export interface PasswordResetDto {
-    token: string;
-    newPassword: string;
-    confirmPassword: string;
+export interface ResetPasswordDto {
+  email: string;
+  newPassword: string;
+  resetToken: string;
 } 

@@ -8,15 +8,15 @@
           
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
+              <label for="userName" class="form-label">Username</label>
               <input
                 type="text"
                 class="form-control"
-                id="username"
-                formControlName="username"
-                [ngClass]="{'is-invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+                id="userName"
+                formControlName="userName"
+                [ngClass]="{'is-invalid': loginForm.get('userName')?.invalid && loginForm.get('userName')?.touched}"
               >
-              <div class="invalid-feedback" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+              <div class="invalid-feedback" *ngIf="loginForm.get('userName')?.invalid && loginForm.get('userName')?.touched">
                 Username is required
               </div>
             </div>

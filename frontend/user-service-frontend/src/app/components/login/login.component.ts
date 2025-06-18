@@ -2,6 +2,12 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+
+interface ErrorResponse {
+  Type: string;
+  Message: string;
+}
 
 @Component({
   selector: 'app-login',
@@ -19,7 +25,7 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
+      userName: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -31,11 +37,12 @@ export class LoginComponent {
 
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
-          this.router.navigate(['/profile']);
+          alert("good!")
+          //this.router.navigate(['/profile']);
         },
-        error: (error) => {
-          console.error('Full error:', error); // <--- важная строка
-          this.errorMessage = error.error.message || 'An error occurred during login';
+        error: (error: HttpErrorResponse) => {
+          console.log('Full error:', error);
+          this.errorMessage = `Error while logging: ${error.error}`;
           this.isLoading = false;
         },
         complete: () => {

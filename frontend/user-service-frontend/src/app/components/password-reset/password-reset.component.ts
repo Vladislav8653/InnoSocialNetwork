@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ResetPasswordDto } from '../../models/auth.model';
 
 @Component({
   selector: 'app-password-reset',
@@ -76,10 +77,10 @@ export class PasswordResetComponent {
       this.errorMessage = '';
       this.successMessage = '';
 
-      const resetData = {
-        token: this.token,
+      const resetData: ResetPasswordDto = {
+        email: this.requestForm.value.email,
         newPassword: this.resetForm.value.newPassword,
-        confirmPassword: this.resetForm.value.confirmPassword
+        resetToken: this.token
       };
 
       this.authService.resetPassword(resetData).subscribe({

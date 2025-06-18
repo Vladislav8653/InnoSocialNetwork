@@ -7,8 +7,8 @@ using UserService.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-const string policyName = "origins";
-builder.Services.ConfigureCors(policyName);
+string policyName = builder.Configuration["PolicyName"] ?? "origins"; 
+builder.Services.ConfigureCors(builder.Configuration, policyName);
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -42,5 +42,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.ApplyMigrations();
 
 app.Run();

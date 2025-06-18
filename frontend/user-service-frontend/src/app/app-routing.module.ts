@@ -6,12 +6,12 @@ import { PasswordResetComponent } from './components/password-reset/password-res
 import { UserListComponent } from './components/user-list/user-list.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/users', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'password-reset', component: PasswordResetComponent },
   { path: 'users', component: UserListComponent },
-  { path: '**', redirectTo: '/users' }
+  { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({
