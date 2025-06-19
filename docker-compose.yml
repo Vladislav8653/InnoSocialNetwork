@@ -59,7 +59,7 @@ services:
     depends_on:
       - postgres-tweets
     ports:
-      - "2001:2000"
+      - "2001:2001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PostgresConnectionString=${TWEET_DB_CONNECTION}
@@ -86,7 +86,7 @@ services:
       - kafka-notifications
       - mongo-notifications
     ports:
-      - "2002:2000"
+      - "2002:2002"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MongoDbSettings__ConnectionString=${NOTIFICATIONS_DB_CONNECTION}
@@ -136,7 +136,7 @@ services:
       - mongo-discussion
       - redis
     ports:
-      - "2003:2000"
+      - "2003:2003"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MongoDbSettings__ConnectionString=${DISCUSSION_DB_CONNECTION}

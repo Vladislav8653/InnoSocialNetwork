@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TweetService.Application.DTOs.StickersDto;
 using TweetService.Application.Pagination;
@@ -44,7 +45,7 @@ public class StickersController(ISender sender) : ControllerBase
         return Ok(sticker);
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateSticker([FromBody] StickerRequestDto request,
         CancellationToken cancellationToken)
@@ -60,7 +61,7 @@ public class StickersController(ISender sender) : ControllerBase
         return NoContent();
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpPut("{stickerId:guid}")]
     public async Task<IActionResult> UpdateSticker(
         [FromBody] StickerRequestDto request,
@@ -79,7 +80,7 @@ public class StickersController(ISender sender) : ControllerBase
         return NoContent();
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpDelete("{stickerId:guid}")]
     public async Task<IActionResult> DeleteSticker(Guid stickerId,
         CancellationToken cancellationToken)

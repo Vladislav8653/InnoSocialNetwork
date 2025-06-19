@@ -1,7 +1,7 @@
 ﻿# Базовый образ для запуска
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
-EXPOSE 2000
+EXPOSE 2001
 
 # Образ для сборки
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
@@ -20,4 +20,5 @@ RUN dotnet publish TweetService.Presentation/TweetService.Presentation.csproj -c
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+ENV ASPNETCORE_URLS=http://+:2001
 ENTRYPOINT ["dotnet", "TweetService.Presentation.dll"]

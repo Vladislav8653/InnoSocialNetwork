@@ -25,7 +25,10 @@ builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 
+app.ConfigureExceptionHandler();
+
 app.UseSwagger();
+
 app.UseSwaggerUI(s =>
 {
     s.SwaggerEndpoint("/swagger/v1/swagger.json", "Inno shop");
@@ -35,8 +38,6 @@ app.UseSwaggerUI(s =>
 app.UseCors(policyName);
 
 app.UseRouting();
-
-app.ConfigureExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();

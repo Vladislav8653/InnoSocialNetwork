@@ -18,7 +18,7 @@ public class AuthenticationManager(
         var user = await userManager.FindByNameAsync(userForAuth.UserName);
         if (user == null)
         {
-            throw new UnauthorizedAccessException("Cannot find user");
+            throw new NotFoundException("Cannot find user");
         }
 
         if (!await userManager.CheckPasswordAsync(user, userForAuth.Password))
