@@ -1,0 +1,60 @@
+﻿{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/users/{everything}", 
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ], 
+      "DownstreamPathTemplate": "/api/users/{everything}", 
+      "DownstreamScheme": "http", 
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice", 
+          "Port": 2000          
+        }
+      ],
+      "ChangeDownstreamPathTemplate": {}, 
+      "SwaggerKey": "UserApi" 
+    },
+    {
+      "UpstreamPathTemplate": "/api/tweets/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/tweets/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tweetservice",
+          "Port": 2001
+        }
+      ],
+      "SwaggerKey": "TweetApi"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/notifications/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "notificationsservice",
+          "Port": 2002
+        }
+      ],
+      "SwaggerKey": "NotificationsApi"
+    },
+    {
+      "UpstreamPathTemplate": "/api/discussions/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/discussions/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "discussionservice",
+          "Port": 2003
+        }
+      ],
+      "SwaggerKey": "DiscussionApi"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000" 
+  }
+}
