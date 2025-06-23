@@ -1,4 +1,8 @@
 ﻿using System.Net;
+using System.Text.Json;
+using AutoMapper;
+using Confluent.Kafka;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -18,45 +22,27 @@ public static class ExceptionMiddlewareExtensions
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                 if (contextFeature != null)
                 {
-                    var exception = contextFeature.Error;
-
-                    int statusCode;
-                    string message;
-
-                    switch (exception)
+                    var error = contextFeature.Error;
+                    var exceptionDetails = new ExceptionDetails
                     {
-                        case NotFoundException notFoundException:
-                            statusCode = (int)HttpStatusCode.NotFound;
-                            message = notFoundException.Message;
-                            break;
-                        
-                        case AlreadyExistsException conflictException:
-                            statusCode = (int)HttpStatusCode.Conflict;
-                            message = conflictException.Message;
-                            break;
-                        
-                        case UnauthorizedException unauthorizedException:
-                            statusCode = (int)HttpStatusCode.Unauthorized;
-                            message = unauthorizedException.Message;
-                            break;
-                        
-                        case BadRequestException badRequestException:
-                            statusCode = (int)HttpStatusCode.BadRequest;
-                            message = badRequestException.Message;
-                            break;
-                        
-                        default:
-                            statusCode = (int)HttpStatusCode.InternalServerError;
-                            message = exception.Message;
-                            break;
-                    }
-
-                    context.Response.StatusCode = statusCode;
-                    await context.Response.WriteAsync(new ErrorDetails
+                        Message = error.Message,
+                        Type = error.GetType().Name, 
+                    };
+                    var response = context.Response;
+                    response.ContentType = "application/json";
+                    response.StatusCode = error switch
                     {
-                        StatusCode = statusCode,
-                        Message = message
-                    }.ToString());
+                        NotFoundException => (int)HttpStatusCode.NotFound,
+                        InvalidOperationException => (int)HttpStatusCode.BadRequest,
+                        ValidationException => (int)HttpStatusCode.BadRequest,
+                        AutoMapperMappingException => (int)HttpStatusCode.BadRequest,
+                        UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+                        JsonException => (int)HttpStatusCode.BadRequest,
+                        ConsumeException => (int)HttpStatusCode.BadRequest,
+                        _ => (int)HttpStatusCode.InternalServerError
+                    };
+                    var result = JsonSerializer.Serialize(exceptionDetails);
+                    await response.WriteAsync(result);
                 }
             });
         });

@@ -1,8 +1,8 @@
 ﻿namespace UserService.Application.Settings;
 
-public class KafkaSettings
+public record KafkaSettings
 {
-    public string BootstrapServers { get; set; }
-    public string GroupId { get; set; }
-    public IEnumerable<string> Topic { get; set; }
+    public string BootstrapServers { get; init; }
+    public string GroupId { get; init; }
+    public ICollection<string> Topic { get; init; }
 }

@@ -5,12 +5,14 @@ using Hangfire.Mongo.Migration.Strategies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NotificationsService.Application.Contracts.Grpc;
 using NotificationsService.Application.Contracts.ServicesContracts;
 using NotificationsService.Application.EmailService;
 using NotificationsService.Application.Settings;
 using NotificationsService.Application.UseCases.HangfireHandlers;
+using NotificationsService.Infrastructure.BackgroundServices;
 using NotificationsService.Infrastructure.Grpc;
 using NotificationsService.Infrastructure.Settings;
 using TweetDigest.Grpc;
@@ -41,6 +43,18 @@ public static class ServiceExtensions
             };
             return new ConsumerBuilder<string, string>(config).Build();
         });
+        
+        services.AddSingleton<IAdminClient>(sp =>
+        {
+            var adminClientConfig = new AdminClientConfig { BootstrapServers = kafkaSettings.BootstrapServers };
+            return new AdminClientBuilder(adminClientConfig)
+                .SetErrorHandler((_, e) => sp.GetRequiredService<ILogger<IAdminClient>>().LogError($"Kafka AdminClient Error: {e.Reason}"))
+                .SetLogHandler((_, log) => sp.GetRequiredService<ILogger<IAdminClient>>().LogInformation($"Kafka AdminClient Log: {log.Message}"))
+                .Build();
+        });
+        
+        services.AddHostedService<KafkaListenerBackgroundService>();
+
     }
     
   public static void ConfigureGrpc(this IServiceCollection services, IConfiguration configuration)
@@ -60,7 +74,6 @@ public static class ServiceExtensions
             throw new ApplicationException("mongoSettings not found");
         
         services.AddHangfire(config => config.UseMongoStorage(
-            //configuration.GetConnectionString(), 
             mongoSettings.ConnectionString,
             new MongoStorageOptions
             {
