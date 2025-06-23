@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -98,12 +99,31 @@ public static class ServiceExtensions
     public static void ConfigureKafka(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<KafkaSettings>(configuration.GetSection("KafkaSettings"));
-        // доабавить код, который делает топики
-        
     }
 
     public static void ConfigureNotificationService(this IServiceCollection services)
     {
         services.AddSingleton<INotificationService, KafkaEmailProducer>();
+    }
+    
+    public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration, string policyName)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: policyName,
+                policy =>
+                {
+                    policy.WithOrigins(configuration["FrontendServer"] ?? string.Empty)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+        });
+    }
+    
+    public static void ApplyMigrations(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+        dbContext.Database.Migrate();
     }
 }

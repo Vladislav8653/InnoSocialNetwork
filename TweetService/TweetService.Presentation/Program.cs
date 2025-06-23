@@ -14,15 +14,26 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddGrpc();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
+
 app.ConfigureExceptionHandler();
+
+app.UseSwagger();
+
+app.UseSwaggerUI(s =>
+{
+    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Inno shop");
+    s.RoutePrefix = string.Empty;
+});
 app.UseRouting();
+
 app.MapGrpcService<TweetDigestService>();
+
 app.MapControllers();
+
 app.MapOpenApi();
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-dbContext.Database.Migrate();
+app.ApplyMigrations();
 
 app.Run();

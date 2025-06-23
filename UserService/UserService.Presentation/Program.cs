@@ -7,6 +7,8 @@ using UserService.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+string policyName = builder.Configuration["PolicyName"] ?? "origins"; 
+builder.Services.ConfigureCors(builder.Configuration, policyName);
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -23,20 +25,25 @@ builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 
+app.ConfigureExceptionHandler();
+
 app.UseSwagger();
+
 app.UseSwaggerUI(s =>
 {
     s.SwaggerEndpoint("/swagger/v1/swagger.json", "Inno shop");
     s.RoutePrefix = string.Empty;
 });
 
-app.UseRouting();
+app.UseCors(policyName);
 
-app.ConfigureExceptionHandler();
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.ApplyMigrations();
 
 app.Run();
