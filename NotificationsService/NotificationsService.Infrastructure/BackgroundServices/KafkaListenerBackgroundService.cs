@@ -16,13 +16,13 @@ public class KafkaListenerBackgroundService(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        /*var topicSpecs = new List<TopicSpecification>
+        var topicSpecs = new List<TopicSpecification>
         {
             new() { Name = "notification.email" },
             new() { Name = "notification.in-app" },
         };
 
-        await adminClient.CreateTopicsAsync(topicSpecs);*/
+        await adminClient.CreateTopicsAsync(topicSpecs);
         
         consumer.Subscribe([
             "notification.email",
