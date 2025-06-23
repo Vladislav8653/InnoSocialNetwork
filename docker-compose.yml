@@ -7,10 +7,10 @@ services:
       context: ./UserService
       dockerfile: Dockerfile
     depends_on:
-      - postgres-users
-      - kafka-cluster-1 
-      - kafka-cluster-2
-      - kafka-cluster-3
+      postgres-users:
+        condition: service_healthy # Ждем, пока Postgres будет здоров
+      kafka-init: # Теперь зависим от инициализатора Kafka, который создает топики
+        condition: service_completed_successfully # Ждем, пока kafka-init завершится
     ports:
       - "2000:2000"
     environment:
@@ -29,21 +29,28 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_USERS_PASSWORD}
     volumes:
       - postgres-users_data:/var/lib/postgresql/data
+    healthcheck: # Healthcheck для PostgreSQL
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERS_USER} -d ${POSTGRES_USERS_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
   # user service END
-  
+
   # tweets service START
   tweetservice:
     build:
       context: ./TweetService
       dockerfile: Dockerfile
     depends_on:
-      - postgres-tweets
+      postgres-tweets:
+        condition: service_healthy # Ждем, пока Postgres будет здоров
     ports:
       - "2001:2001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PostgresConnectionString=${TWEET_DB_CONNECTION}
-    
+
   postgres-tweets:
     container_name: postgres-tweets
     image: postgres:17
@@ -55,25 +62,31 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_TWEETS_PASSWORD}
     volumes:
       - postgres-tweets_data:/var/lib/postgresql/data
+    healthcheck: # Healthcheck для PostgreSQL
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_TWEETS_USER} -d ${POSTGRES_TWEETS_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
   # tweets service FINISH
-  
+
   # notification service START
   notificationsservice:
     build:
       context: ./NotificationsService
       dockerfile: Dockerfile
     depends_on:
-      - mongo-notifications
-      - kafka-cluster-1
-      - kafka-cluster-2
-      - kafka-cluster-3
+      mongo-notifications:
+        condition: service_healthy # Ждем, пока Mongo будет здоров
+      kafka-init: # Зависим от инициализатора Kafka
+        condition: service_completed_successfully
     ports:
       - "2002:2002"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MongoDbSettings__ConnectionString=${NOTIFICATIONS_DB_CONNECTION}
       - KafkaSettings__BootstrapServers=${KAFKA_BROKER}
-  
+
   mongo-notifications:
     image: mongo:6.0
     container_name: mongo-notifications
@@ -85,23 +98,31 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_NOTIFICATIONS_PASSWORD}
     volumes:
       - mongo-notifications_data:/data/db
+    healthcheck: # Healthcheck для MongoDB
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })", "--quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
   # notification service FINISH
-  
+
   # discussion service START
   discussionservice:
     build:
       context: ./DiscussionService
       dockerfile: Dockerfile
     depends_on:
-      - mongo-discussion
-      - redis
+      mongo-discussion:
+        condition: service_healthy # Ждем, пока Mongo будет здоров
+      redis:
+        condition: service_healthy # Ждем, пока Redis будет здоров
     ports:
       - "2003:2003"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MongoDbSettings__ConnectionString=${DISCUSSION_DB_CONNECTION}
       - RedisServerAddress=redis:6379
-  
+
   mongo-discussion:
     image: mongo:6.0
     container_name: mongo-discussion
@@ -113,7 +134,13 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DISCUSSION_PASSWORD}
     volumes:
       - mongo-discussion_data:/data/db
-        
+    healthcheck: # Healthcheck для MongoDB
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })", "--quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
   redis:
     image: redis:8.0
     container_name: redis-discussion
@@ -121,84 +148,147 @@ services:
       - "6379:6379"
     volumes:
       - redis-discussion_data:/data
-    command: [ "redis-server", "--appendonly", "yes" ]
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck: # Healthcheck для Redis
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30 # Redis стартует быстро, но дадим побольше попыток
   # discussion service FINISH
-  
+
   # kafka clusters START
   zookeeper-cluster:
     container_name: zookeeper-cluster
     image: confluentinc/cp-zookeeper:7.5.0
+    ports:
+      - "2181:2181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181 
-  
+      ZOOKEEPER_CLIENT_PORT: 2181
+    healthcheck: # Healthcheck для ZooKeeper
+      test: ["CMD-SHELL", "echo stat | nc localhost 2181"]
+      interval: 5s
+      timeout: 5s
+      retries: 10 # Увеличим количество попыток, чтобы дать ZooKeeper время
+      start_period: 15s # Даем ZooKeeper время на старт до начала проверок
+
   kafka-cluster-1:
     container_name: kafka-cluster-1
     image: confluentinc/cp-kafka:7.5.0
     depends_on:
-      - zookeeper-cluster
+      zookeeper-cluster:
+        condition: service_healthy # Ждем, пока ZooKeeper будет здоров
     ports:
-      - "9092:9092" 
+      - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-cluster:2181
-     
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:9092,PLAINTEXT_INTERNAL://kafka-cluster-1:29092,PLAINTEXT_DOCKER://kafka-cluster-1:29093
-    
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_DOCKER:PLAINTEXT
-  
-      KAFKA_LISTENERS: PLAINTEXT_HOST://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_DOCKER://0.0.0.0:29093
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL # Указывает на внутренний слушатель
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-cluster:2181 # Имя сервиса ZooKeeper
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:9092,PLAINTEXT_INTERNAL://kafka-cluster-1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT_HOST://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false" # Отключаем автосоздание, чтобы управлять им явно через kafka-init
     volumes:
       - kafka-cluster-1_data:/var/lib/kafka/data
-    
+    healthcheck: # Healthcheck для Kafka брокера
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:29092 --list || exit 1"] # Проверяем доступность брокера
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
   kafka-cluster-2:
-      container_name: kafka-cluster-2
-      image: confluentinc/cp-kafka:7.5.0
-      depends_on:
-        - zookeeper-cluster
-      ports:
-        - "9093:9092" 
-      environment:
-        KAFKA_BROKER_ID: 2
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper-cluster:2181
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:9093,PLAINTEXT_INTERNAL://kafka-cluster-2:29092,PLAINTEXT_DOCKER://kafka-cluster-2:29093
-        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_DOCKER:PLAINTEXT
-        KAFKA_LISTENERS: PLAINTEXT_HOST://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_DOCKER://0.0.0.0:29093
-        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
-        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
-        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
-        KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      volumes:
-        - kafka-cluster-2_data:/var/lib/kafka/data
-    
+    container_name: kafka-cluster-2
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      zookeeper-cluster:
+        condition: service_healthy
+    ports:
+      - "9093:9092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-cluster:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:9093,PLAINTEXT_INTERNAL://kafka-cluster-2:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT_HOST://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+    volumes:
+      - kafka-cluster-2_data:/var/lib/kafka/data
+    healthcheck: # Healthcheck для Kafka брокера
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:29092 --list || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
   kafka-cluster-3:
-      container_name: kafka-cluster-3
-      image: confluentinc/cp-kafka:7.5.0
-      depends_on:
-        - zookeeper-cluster
-      ports:
-        - "9094:9092" 
-      environment:
-        KAFKA_BROKER_ID: 3
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper-cluster:2181
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:9094,PLAINTEXT_INTERNAL://kafka-cluster-3:29092,PLAINTEXT_DOCKER://kafka-cluster-3:29093
-        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_DOCKER:PLAINTEXT
-        KAFKA_LISTENERS: PLAINTEXT_HOST://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_DOCKER://0.0.0.0:29093
-        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
-        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
-        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
-        KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      volumes:
-        - kafka-cluster-3_data:/var/lib/kafka/data
-  # kafka clusters FINISH
-  
-  
+    container_name: kafka-cluster-3
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      zookeeper-cluster:
+        condition: service_healthy
+    ports:
+      - "9094:9092"
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-cluster:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://localhost:9094,PLAINTEXT_INTERNAL://kafka-cluster-3:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT_HOST://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+    volumes:
+      - kafka-cluster-3_data:/var/lib/kafka/data
+    healthcheck: # Healthcheck для Kafka брокера
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:29092 --list || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  kafka-init: # Сервис для инициализации топиков
+    container_name: kafka-init
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      kafka-cluster-1:
+        condition: service_healthy # Ждем, пока первый брокер будет здоров
+      kafka-cluster-2:
+        condition: service_healthy # Ждем, пока второй брокер будет здоров
+      kafka-cluster-3:
+        condition: service_healthy # Ждем, пока третий брокер будет здоров
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: |
+      echo "Waiting for Kafka brokers to be ready..."
+      # Небольшая задержка, чтобы дать брокерам немного времени после healthcheck
+      sleep 5 
+
+      echo "Creating Kafka topics..."
+      # Создаем топик 'notification.email'
+      kafka-topics --bootstrap-server kafka-cluster-1:29092 \
+                   --create --if-not-exists \
+                   --topic notification.email \
+                   --partitions 3 \
+                   --replication-factor 3
+
+      # Создаем топик 'notification.in-app'
+      kafka-topics --bootstrap-server kafka-cluster-1:29092 \
+                   --create --if-not-exists \
+                   --topic notification.in-app \
+                   --partitions 3 \
+                   --replication-factor 3
+
+      echo "Kafka topics created successfully (if they didn't exist)."
+
+# kafka clusters FINISH
 
 volumes:
   postgres-users_data:
@@ -206,6 +296,6 @@ volumes:
   mongo-notifications_data:
   mongo-discussion_data:
   redis-discussion_data:
-  kafka-cluster-1_data: 
-  kafka-cluster-2_data: 
-  kafka-cluster-3_data: 
+  kafka-cluster-1_data:
+  kafka-cluster-2_data:
+  kafka-cluster-3_data:
