@@ -1,0 +1,82 @@
+<!-- User list component template -->
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Users</h2>
+    </div>
+    <div class="col-md-4">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search users..."
+          (input)="onSearch($any($event.target).value)"
+        >
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="row" *ngIf="!isLoading && users.length > 0">
+    <div class="col-md-4 mb-4" *ngFor="let user of users">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <img
+              [src]="user.profilePictureUrl || 'assets/default-avatar.png'"
+              class="rounded-circle me-3"
+              style="width: 50px; height: 50px; object-fit: cover;"
+              alt="Profile picture"
+            >
+            <div>
+              <h5 class="card-title mb-0">{{ user.firstName }} {{ user.lastName }}</h5>
+              <p class="text-muted mb-0">@{{ user.username }}</p>
+            </div>
+          </div>
+          <p class="card-text" *ngIf="user.bio">{{ user.bio }}</p>
+          <div class="text-muted small">
+            <p class="mb-1"><i class="bi bi-envelope"></i> {{ user.email }}</p>
+            <p class="mb-1" *ngIf="user.phoneNumber">
+              <i class="bi bi-telephone"></i> {{ user.phoneNumber }}
+            </p>
+            <p class="mb-0">
+              <i class="bi bi-calendar"></i>
+              Joined {{ user.createdAt | date:'mediumDate' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="alert alert-info" *ngIf="!isLoading && users.length === 0">
+    No users found.
+  </div>
+
+  <!-- Pagination -->
+  <nav *ngIf="!isLoading && totalPages > 1" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="onPageChange(currentPage - 1)" style="cursor: pointer;">Previous</a>
+      </li>
+      <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+        <a class="page-link" (click)="onPageChange(page)" style="cursor: pointer;">{{ page }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)" style="cursor: pointer;">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div> 

@@ -1,0 +1,92 @@
+<!-- Register component template -->
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Register</h2>
+          
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="userName">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="userName"
+                formControlName="userName"
+                [ngClass]="{'is-invalid': registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched}"
+              >
+              <div class="invalid-feedback" *ngIf="registerForm.get('userName')?.errors?.['required']">
+                Username is required
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                formControlName="email"
+                [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+              >
+              <div class="invalid-feedback" *ngIf="registerForm.get('email')?.errors?.['required']">
+                Email is required
+              </div>
+              <div class="invalid-feedback" *ngIf="registerForm.get('email')?.errors?.['email']">
+                Please enter a valid email
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+              >
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.errors?.['required']">
+                Password is required
+              </div>
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                Password must be at least 6 characters
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label>Register as:</label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="role" id="user" value="1" formControlName="role" checked>
+                <label class="btn btn-outline-primary" for="user">User</label>
+
+                <input type="radio" class="btn-check" name="role" id="admin" value="2" formControlName="role">
+                <label class="btn btn-outline-primary" for="admin">Admin</label>
+              </div>
+            </div>
+
+            <div class="alert alert-danger" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </div>
+
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="registerForm.invalid || isLoading"
+              >
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                {{ isLoading ? 'Registering...' : 'Register' }}
+              </button>
+            </div>
+          </form>
+
+          <div class="mt-3 text-center">
+            <a routerLink="/login" class="text-decoration-none">Already have an account? Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
