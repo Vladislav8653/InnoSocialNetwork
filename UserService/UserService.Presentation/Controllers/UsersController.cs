@@ -11,6 +11,7 @@ using UserService.Application.UseCases.Queries.UserQueries.GetAllUsers;
 namespace UserService.Presentation.Controllers;
 
 [ApiController]
+[ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/users")]
 public class UsersController(IMediator mediator) : ControllerBase
 {
