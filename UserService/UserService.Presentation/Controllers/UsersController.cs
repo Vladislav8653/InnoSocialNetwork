@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.DTO;
@@ -9,12 +10,12 @@ using UserService.Application.UseCases.Queries.UserQueries.GetAllUsers;
 
 namespace UserService.Presentation.Controllers;
 
-[Route("api/users")]
 [ApiController]
 [ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/users")]
 public class UsersController(IMediator mediator) : ControllerBase
 {
-    [HttpGet("getAllUsers")]
+    [HttpGet]
     [Authorize(Policy = "Admin")]
     public async Task<IActionResult> GetAllUsers()
     {
@@ -24,7 +25,7 @@ public class UsersController(IMediator mediator) : ControllerBase
         return Ok(users);
     }
     
-    [HttpPost("register")]
+    [HttpPost]
     public async Task<IActionResult> RegisterUser(
         [FromBody] UserRequestDto userRequestDto)
     {
@@ -49,7 +50,7 @@ public class UsersController(IMediator mediator) : ControllerBase
         return Ok(new { AccessToken = accessToken, RefreshToken = refreshToken });
     }
 
-    [HttpDelete("deleteUser/{userId}")]
+    [HttpDelete("{userId}")]
     [Authorize(Policy = "Admin")]
     public async Task<IActionResult> DeleteUser(string userId)
     {
