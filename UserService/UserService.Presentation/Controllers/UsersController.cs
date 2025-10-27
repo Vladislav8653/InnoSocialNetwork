@@ -11,6 +11,7 @@ namespace UserService.Presentation.Controllers;
 
 [Route("api/users")]
 [ApiController]
+[ApiVersion("1.0")]
 public class UsersController(IMediator mediator) : ControllerBase
 {
     [HttpGet("getAllUsers")]

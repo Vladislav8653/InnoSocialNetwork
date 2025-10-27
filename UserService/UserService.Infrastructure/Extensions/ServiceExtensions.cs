@@ -66,11 +66,9 @@ public static class ServiceExtensions
     
     public static void ConfigureSwagger(this IServiceCollection services)
     {
-        services.AddSwaggerGen(s =>
+        services.AddSwaggerGen(options =>
         {
-            s.SwaggerDoc("v1", new OpenApiInfo { Title = "User management", Version = "v1"
-            });
-            s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
                 Description = "Place to add JWT with Bearer",
@@ -78,7 +76,7 @@ public static class ServiceExtensions
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-            s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
             {
                 {
                     new OpenApiSecurityScheme
